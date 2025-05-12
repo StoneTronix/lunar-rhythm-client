@@ -1,18 +1,23 @@
-import React, { createContext, useContext, useState, useRef, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
 import { Track, Playlist } from '../types';
 import { Howl } from 'howler';
 
 interface PlayerContextType {
-  audioRef: React.RefObject<Howl | null>;
-  currentTrack: Track | null;  
+  currentTrack: Track | null;
   isPlaying: boolean;
   progress: number;
   playlists: Playlist[];
-
-  togglePlay: () => void;  
+  playTrack: (track: Track) => void;
+  pause: () => void;
+  togglePlay: () => void;
   setCurrentTrack: (track: Track | null) => void;
   setProgress: (value: number) => void;
-  
   setPlaylists: React.Dispatch<React.SetStateAction<Playlist[]>>;
 }
 
@@ -25,17 +30,40 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const audioRef = useRef<Howl | null>(null);
 
+  const playTrack = (track: Track) => {
+    if (audioRef.current) {
+      audioRef.current.unload();
+    }
+
+    const sound = new Howl({
+      src: [`http://localhost:4000/music/${track.id}.wav`],
+      html5: true,
+      onend: () => setProgress(0),
+    });
+
+    audioRef.current = sound;
+    setCurrentTrack(track);
+    sound.play();
+    setIsPlaying(true);
+  };
+
+  const pause = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
   const togglePlay = () => {
     if (!audioRef.current) return;
     if (isPlaying) {
-      audioRef.current.pause();
+      pause();
     } else {
       audioRef.current.play();
+      setIsPlaying(true);
     }
-    setIsPlaying(prev => !prev);
   };
 
-  // Обновление прогресса
   useEffect(() => {
     const interval = setInterval(() => {
       if (audioRef.current && isPlaying) {
@@ -45,7 +73,6 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         }
       }
     }, 1000);
-    
     return () => clearInterval(interval);
   }, [isPlaying]);
 
@@ -54,13 +81,14 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       value={{
         currentTrack,
         isPlaying,
-        setCurrentTrack,
-        togglePlay,
-        audioRef,
         progress,
-        setProgress,
         playlists,
-        setPlaylists
+        playTrack,
+        pause,
+        togglePlay,
+        setCurrentTrack,
+        setProgress,
+        setPlaylists,
       }}
     >
       {children}
