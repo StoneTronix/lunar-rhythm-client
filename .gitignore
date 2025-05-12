@@ -1,4 +1,4 @@
-public
+public/music/*
 node_modules
 dist
 .env
