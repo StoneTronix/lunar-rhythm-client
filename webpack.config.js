@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: './src/main.tsx',
+  entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -12,7 +12,7 @@ module.exports = {
   devServer: {
     static: './dist',
     historyApiFallback: true, // для React Router
-    port: 3000,
+    port: 8080,
     open: true,
   },
   resolve: {
@@ -21,12 +21,20 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(ts|tsx)$/,
+        test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
       },
       {
-        test: /\.css$/i,
+        test: /\.scss$/,
+        use: [
+          'style-loader',   // Вставляет CSS в DOM
+          'css-loader',     // Преобразует CSS в модули
+          'sass-loader',    // Компилирует SCSS в CSS
+        ],
+      },
+      {
+        test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
     ],

@@ -1,0 +1,19 @@
+.track-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.track-item:last-child {
+  border-bottom: none;
+}
+
+.track-item div {
+  font-size: 1rem;
+  color: #555;
+}
+
+.track-item strong {
+  color: #333;
+}
