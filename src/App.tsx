@@ -11,25 +11,30 @@ import Navbar from './components/Navbar';
 
 import { PlayerBar } from './components/PlayerBar';
 import { PlayerProvider } from './context/PlayerContext';
+import { PlaylistsProvider } from './context/PlaylistsContext';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const App: React.FC = () => {
   const location = useLocation();
 
   return (
-    <PlayerProvider>
-      <div>
-        <Navbar />
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Home />} />
-            <Route path="/library" element={<Library />} />
-            <Route path="/playlists" element={<Playlists />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </AnimatePresence>
-        <PlayerBar />
-      </div>
+    <PlayerProvider> 
+      <PlaylistsProvider>
+        <DndProvider backend={HTML5Backend}>
+          <Navbar />
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<Home />} />
+              <Route path="/library" element={<Library />} />
+              <Route path="/playlists" element={<Playlists />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </AnimatePresence>
+          <PlayerBar />      
+        </DndProvider>
+      </PlaylistsProvider>
     </PlayerProvider>
   );
 };

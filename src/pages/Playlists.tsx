@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import playlistsData from '../data/mockPlaylists.json';
 import { Playlist } from '../types';
 import { PlaylistList } from '../components/PlaylistList';
-import { PlaylistView } from '../components/PlaylistView';
+import PlaylistView from '../components/PlaylistView';
 
 import '../styles/Playlists.scss';
 

@@ -1,13 +1,11 @@
-import React from 'react';
-import { Howl } from 'howler';
+import { forwardRef } from 'react';
 import { Track } from '../types';
+import { useDrag } from 'react-dnd';
 import { usePlayer } from '../context/PlayerContext';
 import '../styles/TrackItem.scss';
 
-
 interface TrackItemProps {
   track: Track;
-  onPlay: (track: Track) => void;
 }
 
 const formatDuration = (seconds: number): string => {
@@ -16,41 +14,70 @@ const formatDuration = (seconds: number): string => {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
-export const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
-  const { setCurrentTrack, audioRef, setProgress } = usePlayer();
-  const [isPlaying, setIsPlaying] = React.useState(false);
+const TrackItem = forwardRef<HTMLDivElement, TrackItemProps>(({ track }, ref) => {
+  const { currentTrack, isPlaying, playTrack, pause, playlists, setPlaylists } = usePlayer();
+
+  const [{ isDragging }, dragRef] = useDrag(() => ({
+    type: 'TRACK',
+    item: track,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }), [track]);
 
   const handlePlayPause = () => {
-    if (audioRef.current && audioRef.current.playing()) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-      return;
+    if (currentTrack?.id === track.id) {
+      isPlaying ? pause() : playTrack(track);
+    } else {
+      playTrack(track);
     }
+  };
 
-    const newAudio = new Howl({
-      src: [`/music/${track.id}.mp3`],
-      html5: true,
-      onend: () => {
-        setIsPlaying(false);
-        setProgress(0);
-      },
+  const handleMoveTrack = (targetPlaylistId: string) => {
+    const updatedPlaylists = playlists.map(playlist => {
+      let updatedTracks = playlist.tracks;
+
+      if (playlist.id === targetPlaylistId && !playlist.tracks.find(t => t.id === track.id)) {
+        updatedTracks = [...updatedTracks, track];
+      }
+
+      if (playlist.id !== targetPlaylistId) {
+        updatedTracks = updatedTracks.filter(t => t.id !== track.id);
+      }
+
+      return { ...playlist, tracks: updatedTracks };
     });
 
-    audioRef.current = newAudio;
-    setCurrentTrack(track);
-    newAudio.play();
-    setIsPlaying(true);
+    setPlaylists(updatedPlaylists);
   };
 
   return (
-    <div className="track-item">
+      <div
+        ref={(node) => {
+          if (node) dragRef(node);
+        }}
+        className="track-item"
+        style={{ opacity: isDragging ? 0.5 : 1 }}
+      >
       <div>
         <strong>{track.title}</strong> — {track.artist}
       </div>
       <div>{formatDuration(track.duration)}</div>
       <button onClick={handlePlayPause}>
-        {isPlaying ? 'Пауза' : 'Играть'}
+        {currentTrack?.id === track.id && isPlaying ? 'Пауза' : 'Играть'}
       </button>
+      <div>
+        <h4>Переместить в плейлист:</h4>
+        {playlists.map((playlist) => (
+          <button key={playlist.id} onClick={() => handleMoveTrack(playlist.id)}>
+            {playlist.name}
+          </button>
+        ))}
+      </div>
     </div>
   );
-};
+});
+
+TrackItem.displayName = 'TrackItem'; // Установить имя компонента для отладки
+
+export default TrackItem;

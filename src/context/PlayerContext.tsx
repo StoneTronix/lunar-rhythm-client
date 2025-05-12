@@ -1,15 +1,19 @@
 import React, { createContext, useContext, useState, useRef, useEffect } from 'react';
-import { Track } from '../types';
+import { Track, Playlist } from '../types';
 import { Howl } from 'howler';
 
 interface PlayerContextType {
-  currentTrack: Track | null;
-  isPlaying: boolean;
-  setCurrentTrack: (track: Track | null) => void;
-  togglePlay: () => void;
   audioRef: React.RefObject<Howl | null>;
+  currentTrack: Track | null;  
+  isPlaying: boolean;
   progress: number;
+  playlists: Playlist[];
+
+  togglePlay: () => void;  
+  setCurrentTrack: (track: Track | null) => void;
   setProgress: (value: number) => void;
+  
+  setPlaylists: React.Dispatch<React.SetStateAction<Playlist[]>>;
 }
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -18,6 +22,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const audioRef = useRef<Howl | null>(null);
 
   const togglePlay = () => {
@@ -32,17 +37,16 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // Обновление прогресса
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-    if (isPlaying && audioRef.current) {
-      interval = setInterval(() => {
-        setProgress(audioRef.current?.seek() as number);
-      }, 500);
-    } else {
-      if (interval) clearInterval(interval);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
+    const interval = setInterval(() => {
+      if (audioRef.current && isPlaying) {
+        const seek = audioRef.current.seek();
+        if (typeof seek === 'number') {
+          setProgress(seek);
+        }
+      }
+    }, 1000);
+    
+    return () => clearInterval(interval);
   }, [isPlaying]);
 
   return (
@@ -55,6 +59,8 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         audioRef,
         progress,
         setProgress,
+        playlists,
+        setPlaylists
       }}
     >
       {children}
