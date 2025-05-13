@@ -15,18 +15,7 @@ export const PlayerBar: React.FC = () => {
       <div className="track-info">
         <strong>{currentTrack.title}</strong> — {currentTrack.artist}
       </div>
-      <ProgressBar />
-      {/* <div className="progress">
-        <span>{formatTime(progress)}</span>
-        <input
-          type="range"
-          min="0"
-          max={duration}
-          value={progress}
-          readOnly
-        />
-        <span>{formatTime(duration)}</span>
-      </div> */}
+      <ProgressBar />      
       <button onClick={togglePlay}>
         {isPlaying ? '⏸' : '▶️'}
       </button>

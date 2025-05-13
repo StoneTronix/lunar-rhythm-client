@@ -14,13 +14,13 @@
         "id": "t2",
         "title": "Трек Два",
         "artist": "Исполнитель B",
-        "duration": 185
+        "duration": 60
       },
       {
         "id": "test",
-        "title": "WAV Тест",
+        "title": "Тест WAV",
         "artist": "Тестовый Исполнитель",
-        "duration": 300
+        "duration": 730
       }
     ]
   },
