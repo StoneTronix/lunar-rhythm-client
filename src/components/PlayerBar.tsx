@@ -4,11 +4,9 @@ import ProgressBar from './ProgressBar';
 import '../styles/PlayerBar.scss';
 
 export const PlayerBar: React.FC = () => {
-  const { currentTrack, isPlaying, togglePlay, progress } = usePlayer();
+  const { currentTrack, isPlaying, togglePlay } = usePlayer();
 
   if (!currentTrack) return null;
-
-  const duration = currentTrack.duration;
 
   return (
     <div className="player-bar">
