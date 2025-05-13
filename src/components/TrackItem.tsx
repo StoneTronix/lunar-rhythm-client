@@ -14,7 +14,7 @@ const formatDuration = (seconds: number): string => {
 };
 
 const TrackItem: React.FC<Props> = ({ track }) => {
-  const { currentTrack, isPlaying, playTrack, pause } = usePlayer();
+  const { currentTrack, isPlaying, togglePlay, playTrack, pause } = usePlayer();
 
   const [{ isDragging }, dragRef] = useDrag(() => ({
     type: 'TRACK',
@@ -31,8 +31,9 @@ const TrackItem: React.FC<Props> = ({ track }) => {
   };
 
   const handlePlayPause = () => {
+    
     if (currentTrack?.id === track.id) {
-      pause();
+      togglePlay();
     } else {
       playTrack(track);
     }

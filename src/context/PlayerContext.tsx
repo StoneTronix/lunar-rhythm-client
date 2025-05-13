@@ -13,9 +13,9 @@ interface PlayerContextType {
   isPlaying: boolean;
   progress: number;
   playlists: Playlist[];
-  playTrack: (track: Track) => void;
-  pause: () => void;
-  togglePlay: () => void;
+  playTrack: (track: Track) => void;  // Загрузка трека с сервера
+  pause: () => void;                  // Пауза текущего трека
+  togglePlay: () => void;             // Логика переключателя паузы
   setCurrentTrack: (track: Track | null) => void;
   setProgress: (value: number) => void;
   setPlaylists: React.Dispatch<React.SetStateAction<Playlist[]>>;

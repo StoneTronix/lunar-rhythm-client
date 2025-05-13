@@ -1,12 +1,7 @@
 import React from 'react';
 import { usePlayer } from '../context/PlayerContext';
 import '../styles/PlayerBar.scss';
-
-const formatTime = (time: number) => {
-  const mins = Math.floor(time / 60);
-  const secs = Math.floor(time % 60);
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-};
+import ProgressBar from './ProgressBar';
 
 export const PlayerBar: React.FC = () => {
   const { currentTrack, isPlaying, togglePlay, progress } = usePlayer();
@@ -20,7 +15,8 @@ export const PlayerBar: React.FC = () => {
       <div className="track-info">
         <strong>{currentTrack.title}</strong> — {currentTrack.artist}
       </div>
-      <div className="progress">
+      <ProgressBar />
+      {/* <div className="progress">
         <span>{formatTime(progress)}</span>
         <input
           type="range"
@@ -30,7 +26,7 @@ export const PlayerBar: React.FC = () => {
           readOnly
         />
         <span>{formatTime(duration)}</span>
-      </div>
+      </div> */}
       <button onClick={togglePlay}>
         {isPlaying ? '⏸' : '▶️'}
       </button>
