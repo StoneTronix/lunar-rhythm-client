@@ -4,7 +4,13 @@ import { Playlist, Track } from '../types';
 interface PlaylistsContextType {
   playlists: Playlist[];
   setPlaylists: React.Dispatch<React.SetStateAction<Playlist[]>>;
-  moveTrack: (track: Track, targetPlaylistId: string) => void;
+  moveTrack: (
+    track: Track, 
+    targetPlaylistId: string, 
+    sourceIndex?: number, 
+    targetIndex?: number, 
+    commit?: boolean
+  ) => void;
   addPlaylist: (name: string) => void;
 }
 
@@ -13,21 +19,36 @@ const PlaylistsContext = createContext<PlaylistsContextType | undefined>(undefin
 export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
-  const moveTrack = (track: Track, targetPlaylistId: string) => {
+  const moveTrack = (
+    track: Track,
+    targetPlaylistId: string,
+    sourceIndex?: number,
+    targetIndex?: number,
+    commit = false
+  ) => {
     setPlaylists((prev) => {
       const newPlaylists = prev.map((playlist) => {
         if (playlist.id === targetPlaylistId) {
-          const updatedTracks = [...playlist.tracks.filter(t => t.id !== track.id), track];
+          // Если трек перемещается внутри плейлиста, меняем только порядок
+          const updatedTracks = [...playlist.tracks];
+          if (sourceIndex !== undefined && targetIndex !== undefined) {
+            updatedTracks.splice(targetIndex, 0, updatedTracks.splice(sourceIndex, 1)[0]);
+          } else {
+            updatedTracks.push(track);
+          }
+
+          // Если коммит включен, отправляем изменения на сервер
+          if (commit) {
+            fetch(`http://localhost:4000/playlists/${targetPlaylistId}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ tracks: updatedTracks }),
+            });
+          }
+
           return { ...playlist, tracks: updatedTracks };
         }
         return playlist;
-      });
-
-      // Сохраняем новый порядок треков на сервере
-      fetch(`http://localhost:4000/playlists/${targetPlaylistId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tracks: newPlaylists.find(pl => pl.id === targetPlaylistId)?.tracks }),
       });
 
       return newPlaylists;

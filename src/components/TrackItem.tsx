@@ -1,13 +1,13 @@
 import React, { useRef } from 'react';
-import { useDrag } from 'react-dnd';
-import { Track } from '../types';
+import { useDrag, useDrop } from 'react-dnd';
 import { usePlayer } from '../context/PlayerContext';
-import { usePlaylists } from '../context/PlaylistsContext';
+import { Track } from '../types';
 
 interface Props {
   track: Track;
   index: number;      // Индекс для сохранения порядка
-  playlistId: string; // ID плейлиста для обновления
+  // playlistId: string; // ID плейлиста для обновления
+  moveTrack: (fromIndex: number, toIndex: number) => void;  
 }
 
 const formatDuration = (seconds: number): string => {
@@ -16,26 +16,26 @@ const formatDuration = (seconds: number): string => {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
-const TrackItem: React.FC<Props> = ({ track }) => {
+const TrackItem: React.FC<Props> = ({ track, index, moveTrack }) => {
   const { currentTrack, isPlaying, togglePlay, playTrack } = usePlayer();
-  const { moveTrack } = usePlaylists();
+  const ref = useRef<HTMLDivElement>(null);
 
-  const [{ isDragging }, dragRef] = useDrag(() => ({
+  const [, drag] = useDrag({
     type: 'TRACK',
-    item: { track },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  }), [track]);
+    item: { index },
+  });
 
-  const divRef = useRef<HTMLDivElement | null>(null);
-  const combinedRef = (node: HTMLDivElement | null) => {
-    divRef.current = node;
-    dragRef(node); // Добавляем ссылку на dragRef
-  };
+  const [, drop] = useDrop({
+    accept: 'TRACK',
+    hover: (item: { index: number }) => {
+      if (item.index !== index) {
+        moveTrack(item.index, index);
+        item.index = index;
+      }
+    },
+  });
 
-  const handlePlayPause = () => {
-    
+  const handlePlayPause = () => {    
     if (currentTrack?.id === track.id) {
       togglePlay();
     } else {
@@ -43,11 +43,11 @@ const TrackItem: React.FC<Props> = ({ track }) => {
     }
   };
 
+  drag(drop(ref));
+
   return (
-    <div ref={combinedRef} className={`track-item ${isDragging ? 'dragging' : ''}`}>
-      <div>
-        <strong>{track.title}</strong> — {track.artist}
-      </div>
+    <div ref={ref} className="track-item">
+      <strong>{track.title} — {track.artist}</strong>
       <div>{formatDuration(track.duration)}</div>
       <button onClick={handlePlayPause}>
         {currentTrack?.id === track.id && isPlaying ? 'Pause' : 'Play'}

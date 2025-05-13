@@ -1,42 +1,50 @@
-import { forwardRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useDrop } from 'react-dnd';
-import { Track, Playlist } from '../types';
-import { usePlaylists } from '../context/PlaylistsContext';
+import { Playlist, Track } from '../types';
 import TrackItem from './TrackItem';
 
 interface PlaylistViewProps {
   playlist: Playlist;
 }
 
-const PlaylistView = forwardRef<HTMLDivElement, PlaylistViewProps>(({ playlist }, ref) => {
-  const { moveTrack } = usePlaylists();
+const PlaylistView: React.FC<PlaylistViewProps> = ({ playlist }) => {
+  const [tracks, setTracks] = useState<Track[]>(playlist.tracks);
 
-  const [{ isOver }, dropRef] = useDrop(() => ({
+  const moveTrack = useCallback((fromIndex: number, toIndex: number) => {
+    setTracks((prevTracks) => {
+      const updated = [...prevTracks];
+      const [moved] = updated.splice(fromIndex, 1);
+      updated.splice(toIndex, 0, moved);
+      return updated;
+    });
+  }, []);
+
+  // Используем реф для элемента, на который будет происходить сброс (drop)
+  const dropRef = useRef<HTMLDivElement | null>(null);
+
+  const [, drop] = useDrop(() => ({
     accept: 'TRACK',
-    drop: (track: Track) => moveTrack(track, playlist.id),
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-    }),
-  }), [playlist]);
+    drop: (item: { index: number }) => {
+      // Обработчик при сбросе элемента
+    },
+  }));
+
+  // Связываем drop с рефом
+  drop(dropRef);
 
   return (
-    <div
-      ref={(node) => {
-        if (node) dropRef(node);
-      }}
-      className="playlist-view"
-      style={{ backgroundColor: isOver ? '#f0f0f0' : 'white' }}
-    >
+    <div ref={dropRef} className="playlist-view" style={{ padding: '1rem', backgroundColor: '#fafafa' }}>
       <h2>{playlist.name}</h2>
-      <div>
-        {playlist.tracks.map((track, index) => (
-          <TrackItem key={track.id} track={track} index={index} playlistId={playlist.id} />
-        ))}
-      </div>
+      {tracks.map((track, index) => (
+        <TrackItem
+          key={track.id}
+          track={track}
+          index={index}
+          moveTrack={moveTrack}
+        />
+      ))}
     </div>
   );
-});
-
-PlaylistView.displayName = 'PlaylistView'; // Установить имя компонента для отладки
+};
 
 export default PlaylistView;

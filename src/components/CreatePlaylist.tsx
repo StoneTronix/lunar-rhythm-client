@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { usePlayer } from '../context/PlayerContext';
+// import { usePlayer } from '../context/PlaylistsContext';
 
 const CreatePlaylist: React.FC = () => {
   const [playlistName, setPlaylistName] = useState('');
-  const { playlists, setPlaylists } = usePlayer();
+  // const { playlists, setPlaylists } = usePlayer();
 
   const handleCreatePlaylist = () => {
     if (playlistName.trim() === '') return;
@@ -15,7 +15,7 @@ const CreatePlaylist: React.FC = () => {
       createdAt: new Date().toISOString(),
     };
 
-    setPlaylists([...playlists, newPlaylist]);
+    // setPlaylists([...playlists, newPlaylist]);
     setPlaylistName('');
   };
 

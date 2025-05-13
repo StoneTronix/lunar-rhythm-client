@@ -12,13 +12,11 @@ interface PlayerContextType {
   currentTrack: Track | null;
   isPlaying: boolean;
   progress: number;
-  playlists: Playlist[];
   playTrack: (track: Track) => void;  // Загрузка трека с сервера
   pause: () => void;                  // Пауза текущего трека
   togglePlay: () => void;             // Логика переключателя паузы
   setCurrentTrack: (track: Track | null) => void;
   setProgress: (value: number) => void;
-  setPlaylists: React.Dispatch<React.SetStateAction<Playlist[]>>;
 }
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -27,7 +25,6 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const audioRef = useRef<Howl | null>(null);
 
   const playTrack = (track: Track) => {
@@ -85,13 +82,11 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         currentTrack,
         isPlaying,
         progress,
-        playlists,
         playTrack,
         pause,
         togglePlay,
         setCurrentTrack,
-        setProgress,
-        setPlaylists,
+        setProgress        
       }}
     >
       {children}
