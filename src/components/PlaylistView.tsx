@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import { useDrop } from 'react-dnd';
 import { Track, Playlist } from '../types';
 import { usePlaylists } from '../context/PlaylistsContext';
-import TrackItem  from './TrackItem';
+import TrackItem from './TrackItem';
 
 interface PlaylistViewProps {
   playlist: Playlist;
@@ -29,8 +29,8 @@ const PlaylistView = forwardRef<HTMLDivElement, PlaylistViewProps>(({ playlist }
     >
       <h2>{playlist.name}</h2>
       <div>
-        {playlist.tracks.map(track => (
-          <TrackItem key={track.id} track={track} />
+        {playlist.tracks.map((track, index) => (
+          <TrackItem key={track.id} track={track} index={index} playlistId={playlist.id} />
         ))}
       </div>
     </div>

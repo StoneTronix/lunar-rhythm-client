@@ -2,9 +2,12 @@ import React, { useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { Track } from '../types';
 import { usePlayer } from '../context/PlayerContext';
+import { usePlaylists } from '../context/PlaylistsContext';
 
 interface Props {
   track: Track;
+  index: number;      // Индекс для сохранения порядка
+  playlistId: string; // ID плейлиста для обновления
 }
 
 const formatDuration = (seconds: number): string => {
@@ -14,7 +17,8 @@ const formatDuration = (seconds: number): string => {
 };
 
 const TrackItem: React.FC<Props> = ({ track }) => {
-  const { currentTrack, isPlaying, togglePlay, playTrack, pause } = usePlayer();
+  const { currentTrack, isPlaying, togglePlay, playTrack } = usePlayer();
+  const { moveTrack } = usePlaylists();
 
   const [{ isDragging }, dragRef] = useDrag(() => ({
     type: 'TRACK',

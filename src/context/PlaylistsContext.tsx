@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Playlist, Track } from '../types';
-import mockPlaylists from '../data/mockPlaylists.json';
 
 interface PlaylistsContextType {
   playlists: Playlist[];
@@ -12,25 +11,23 @@ interface PlaylistsContextType {
 const PlaylistsContext = createContext<PlaylistsContextType | undefined>(undefined);
 
 export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [playlists, setPlaylists] = useState<Playlist[]>(mockPlaylists);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
   const moveTrack = (track: Track, targetPlaylistId: string) => {
-    setPlaylists(prev => {
-      const newPlaylists = prev.map(playlist => {
-        const isInTarget = playlist.id === targetPlaylistId;
-        const isTrackPresent = playlist.tracks.some(t => t.id === track.id);
-
-        if (isInTarget && !isTrackPresent) {
-          return {
-            ...playlist,
-            tracks: [...playlist.tracks, track],
-          };
+    setPlaylists((prev) => {
+      const newPlaylists = prev.map((playlist) => {
+        if (playlist.id === targetPlaylistId) {
+          const updatedTracks = [...playlist.tracks.filter(t => t.id !== track.id), track];
+          return { ...playlist, tracks: updatedTracks };
         }
+        return playlist;
+      });
 
-        return {
-          ...playlist,
-          tracks: playlist.tracks.filter(t => t.id !== track.id),
-        };
+      // Сохраняем новый порядок треков на сервере
+      fetch(`http://localhost:4000/api/playlists/${targetPlaylistId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tracks: newPlaylists.find(pl => pl.id === targetPlaylistId)?.tracks }),
       });
 
       return newPlaylists;
