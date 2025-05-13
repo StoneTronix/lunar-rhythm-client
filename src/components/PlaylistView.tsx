@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
 import { useDrop } from 'react-dnd';
 import { Track, Playlist } from '../types';
 import { usePlaylists } from '../context/PlaylistsContext';

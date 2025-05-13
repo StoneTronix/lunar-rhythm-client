@@ -10,17 +10,17 @@
         "duration": 1830
       },
       {
-        "id": "t2",
+        "id": "first",
         "title": "Трек Два",
         "artist": "Исполнитель B",
         "duration": 60
       },
       {
         "id": "test",
-        "title": "Тест WAV",
+        "title": "Тестовый WAV",
         "artist": "Тестовый Исполнитель",
         "duration": 730
-      }
+      }      
     ]
   },
   {

@@ -13,7 +13,7 @@ const Playlists: React.FC = () => {
   // Получение плейлистов с сервера
   useEffect(() => {
     const fetchPlaylists = async () => {
-      const response = await fetch('http://localhost:4000/api/playlists');
+      const response = await fetch('http://localhost:4000/playlists');
       if (response.ok) {
         const data = await response.json();
         setPlaylists(data);

@@ -24,7 +24,7 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       });
 
       // Сохраняем новый порядок треков на сервере
-      fetch(`http://localhost:4000/api/playlists/${targetPlaylistId}`, {
+      fetch(`http://localhost:4000/playlists/${targetPlaylistId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tracks: newPlaylists.find(pl => pl.id === targetPlaylistId)?.tracks }),
