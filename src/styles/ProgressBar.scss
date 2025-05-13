@@ -1,3 +1,7 @@
+div {
+  font-size: 14px;
+}
+
 .progress-bar {
   display: flex;
   flex-direction: column;
@@ -5,12 +9,16 @@
   margin-top: 10px;
 }
 
-input[type='range'] {
-  width: 100%;
-  max-width: 500px;
-  margin-top: 10px;
-}
-
-div {
-  font-size: 14px;
+.tooltip {
+  position: absolute;
+  bottom: 20px;
+  transform: translateX(-50%);
+  background: #000;
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
 }
