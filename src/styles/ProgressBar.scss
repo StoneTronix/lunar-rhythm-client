@@ -1,24 +1,45 @@
-div {
-  font-size: 14px;
-}
-
 .progress-bar {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-top: 10px;
+  gap: 8px;
+  width: 60%;
 }
 
-.tooltip {
-  position: absolute;
-  bottom: 20px;
-  transform: translateX(-50%);
-  background: #000;
-  color: #fff;
-  padding: 2px 6px;
-  font-size: 12px;
+.SliderRoot {
+  flex-grow: 1;
+  height: 8px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.SliderTrack {
+  position: relative;
+  flex-grow: 1;
+  height: 8px;
+  background-color: #444;
   border-radius: 4px;
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 2;
+  overflow: hidden;
+}
+
+.SliderRange {
+  position: absolute;
+  height: 100%;
+  background: linear-gradient(to right, #007bff, #00bfff);
+  border-radius: 4px;
+  transition: width 0.2s ease;
+}
+
+
+.SliderThumb {
+  display: block;
+  width: 14px;
+  height: 14px;
+  background-color: #fff;
+  border: 2px solid #007bff;
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }

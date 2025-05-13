@@ -12,25 +12,9 @@
   z-index: 1000;
 
   .track-info {
+    width: 100%;
     flex: 1;
     font-size: 14px;
-  }
-
-  .progress {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 2;
-
-    input[type='range'] {
-      flex-grow: 1;
-    }
-
-    span {
-      font-size: 12px;
-      width: 35px;
-      text-align: center;
-    }
   }
 
   button {

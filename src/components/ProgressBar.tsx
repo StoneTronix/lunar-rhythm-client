@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
+import * as Slider from '@radix-ui/react-slider';
 import { usePlayer } from '../context/PlayerContext';
 import '../styles/ProgressBar.scss';
 
@@ -8,128 +9,38 @@ const formatTime = (time: number) => {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
-const ProgressBar: React.FC = () => {  
+const ProgressBar: React.FC = () => {
   const { progress, currentTrack, setProgress } = usePlayer();
-  const progressRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [tooltipTime, setTooltipTime] = useState<number | null>(null);
-  const [tooltipLeft, setTooltipLeft] = useState(0);
-
-  if (!currentTrack)
-    return null;  
+  if (!currentTrack) return;
   const duration = currentTrack.duration;
-  const percent = (progress / currentTrack.duration) * 100;
 
-  const seekTo = (clientX: number) => {
-    if (!progressRef.current) return;
-
-    const rect = progressRef.current.getBoundingClientRect();
-    const offsetX = clientX - rect.left;
-    const newTime = (offsetX / rect.width) * duration;
-
-    const Howler = require('howler');
-    const sound = Howler.Howler._howls.find(
-      (h: any) => h._src.includes(`${currentTrack.id}.wav`)
-    );
+  const handleChange = (value: number[]) => {
+    if (!currentTrack || !value.length) return;
+    const newTime = value[0];
+    setProgress(newTime);
+    const sound = (window as any).Howler?._howls?.find((h: any) => h._src.includes(currentTrack.id));
     if (sound) {
       sound.seek(newTime);
-      setProgress(newTime);
-    }
-  };  
-
-  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    seekTo(e.clientX);
-  };
-  
-  const handleMouseMove = (e: MouseEvent) => {
-    if (isDragging) {
-      seekTo(e.clientX);
     }
   };
 
-  const handleMouseUp = (e: MouseEvent) => {
-    setIsDragging(false);
-    seekTo(e.clientX);
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
-  };
-
-  const handleMouseDown = () => {
-    setIsDragging(true);
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
-
-  const handleHover = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!progressRef.current) return;
-
-    const rect = progressRef.current.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const hoverTime = (offsetX / rect.width) * duration;
-    setTooltipTime(hoverTime);
-    setTooltipLeft(offsetX);
-  };
-
-  const clearTooltip = () => {
-    setTooltipTime(null);
-  };
+  if (!currentTrack) return null;
 
   return (
-    <div className="progress">
-      <span>{formatTime(progress)}</span>
-      <div
-        ref={progressRef}
-        onClick={handleClick}
-        onMouseMove={handleHover}
-        onMouseLeave={clearTooltip}
-        style={{
-          background: '#ccc',
-          height: '8px',
-          width: '100%',
-          marginTop: '10px',
-          position: 'relative',
-          cursor: 'pointer',
-          borderRadius: '4px',
-        }}
+    <div className="progress-bar">
+      <span>{formatTime(progress)}</span>      
+      <Slider.Root
+        className="SliderRoot"
+        value={[progress]}
+        max={duration}
+        step={1}
+        onValueChange={handleChange}
       >
-        {/* Tooltip */}
-        {tooltipTime !== null && (
-          <div
-            className='tooltip'
-          >
-            {formatTime(tooltipTime)}
-          </div>
-        )}
-
-        {/* Progress Fill */}
-        <div
-          style={{
-            width: `${percent}%`,
-            height: '100%',
-            background: '#007bff',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            borderRadius: '4px',
-          }}
-        />
-
-        {/* Draggable handle */}
-        <div
-          onMouseDown={handleMouseDown}
-          style={{
-            position: 'absolute',
-            left: `calc(${percent}% - 6px)`,
-            top: '-4px',
-            width: '12px',
-            height: '16px',
-            backgroundColor: '#007bff',
-            borderRadius: '50%',
-            cursor: 'grab',
-            zIndex: 1,
-          }}
-        />
-      </div>
+        <Slider.Track className="SliderTrack">
+          <Slider.Range className="SliderRange" />
+        </Slider.Track>
+        <Slider.Thumb className="SliderThumb" aria-label="Time" />
+      </Slider.Root>      
       <span>{formatTime(duration)}</span>
     </div>
   );
