@@ -17,7 +17,7 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const fetchPlaylists = async () => {
     const response = await fetch('http://localhost:4000/playlists');
-    if (!response.ok) {
+    if (response.ok) {
       const data = await response.json();
       setPlaylists(data);
     } else {
@@ -66,21 +66,31 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const moveTrackToPlaylist = (track: Track, targetPlaylistId: string, fromPlaylistId: string) => {
     setPlaylists(prev => {
-      return prev.map(playlist => {
-        if (playlist.id === fromPlaylistId) {
-          return {
-            ...playlist,
-            tracks: playlist.tracks.filter(t => t.id !== track.id),
-          };
-        } else if (playlist.id === targetPlaylistId) {
-          return {
-            ...playlist,
-            tracks: [...playlist.tracks, track],
-          };
-        } else {
-          return playlist;
+      const updated = prev.map(p => {
+        if (p.id !== fromPlaylistId && p.id !== targetPlaylistId) return p;
+
+        if (p.id === fromPlaylistId) {
+          const newTracks = p.tracks.filter(t => t.id !== track.id);
+          const updatedPlaylist = { ...p, tracks: newTracks };
+          updatePlaylists(updatedPlaylist); // ✅ Отправляем
+          return updatedPlaylist;
         }
-      });
+
+        if (p.id === targetPlaylistId) {
+          const fromPlaylist = prev.find(pl => pl.id === fromPlaylistId);
+          const movedTrack = fromPlaylist?.tracks.find(t => t.id === track.id);
+        if (!movedTrack) return p;
+
+          const updatedPlaylist = { ...p, tracks: [...p.tracks, movedTrack] };
+          updatePlaylists(updatedPlaylist); // ✅ Отправляем
+          return updatedPlaylist;
+        }
+
+      return p;
+      
+      
+    });
+   return updated;
     });    
   };
 
