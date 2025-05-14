@@ -1,0 +1,45 @@
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 60%;
+}
+
+.SliderRoot {
+  flex-grow: 1;
+  height: 8px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.SliderTrack {
+  position: relative;
+  flex-grow: 1;
+  height: 8px;
+  background-color: #444;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.SliderRange {
+  position: absolute;
+  height: 100%;
+  background: linear-gradient(to right, #007bff, #00bfff);
+  border-radius: 4px;
+  transition: width 0.2s ease;
+}
+
+
+.SliderThumb {
+  display: block;
+  width: 14px;
+  height: 14px;
+  background-color: #fff;
+  border: 2px solid #007bff;
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
