@@ -1,41 +1,41 @@
 import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { usePlayer } from '../context/PlayerContext';
 import { Track } from '../types';
+import { usePlayer } from '../context/PlayerContext';
+import { usePlaylists } from '../context/PlaylistsContext';
 
 interface Props {
   track: Track;
-  index: number;      // Индекс для сохранения порядка
-  // playlistId: string; // ID плейлиста для обновления
-  moveTrack: (fromIndex: number, toIndex: number) => void;  
+  index: number;
+  playlistId: string;
 }
 
-const formatDuration = (seconds: number): string => {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-};
-
-const TrackItem: React.FC<Props> = ({ track, index, moveTrack }) => {
-  const { currentTrack, isPlaying, togglePlay, playTrack } = usePlayer();
+const TrackItem: React.FC<Props> = ({ track, index, playlistId }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const { currentTrack, isPlaying, togglePlay, playTrack } = usePlayer();
+  const { moveTrackWithinPlaylist } = usePlaylists();
 
-  const [, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     type: 'TRACK',
-    item: { index },
+    item: { track, index, playlistId },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
   });
 
   const [, drop] = useDrop({
     accept: 'TRACK',
-    hover: (item: { index: number }) => {
-      if (item.index !== index) {
-        moveTrack(item.index, index);
+    hover(item: any) {
+      if (item.playlistId === playlistId && item.index !== index) {
+        moveTrackWithinPlaylist(playlistId, item.index, index);
         item.index = index;
       }
     },
   });
 
-  const handlePlayPause = () => {    
+  drag(drop(ref));
+
+  const handlePlayPause = () => {
     if (currentTrack?.id === track.id) {
       togglePlay();
     } else {
@@ -43,15 +43,19 @@ const TrackItem: React.FC<Props> = ({ track, index, moveTrack }) => {
     }
   };
 
-  drag(drop(ref));
-
   return (
-    <div ref={ref} className="track-item">
-      <strong>{track.title} — {track.artist}</strong>
-      <div>{formatDuration(track.duration)}</div>
+    <div
+      ref={ref}
+      className={`track-item ${isDragging ? 'dragging' : ''}`}
+      style={{ opacity: isDragging ? 0.5 : 1, cursor: 'move' }}
+    >
       <button onClick={handlePlayPause}>
         {currentTrack?.id === track.id && isPlaying ? 'Pause' : 'Play'}
       </button>
+      <div>
+        <strong>{track.title}</strong> — {track.artist}
+      </div>
+      <div>{Math.floor(track.duration / 60)}:{String(track.duration % 60).padStart(2, '0')}</div>      
     </div>
   );
 };

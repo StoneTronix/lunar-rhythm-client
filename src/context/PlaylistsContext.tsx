@@ -3,15 +3,11 @@ import { Playlist, Track } from '../types';
 
 interface PlaylistsContextType {
   playlists: Playlist[];
+  fetchPlaylists: () => void;
+  updatePlaylists: (playlist: Playlist) => Promise<void>;
   setPlaylists: React.Dispatch<React.SetStateAction<Playlist[]>>;
-  moveTrack: (
-    track: Track, 
-    targetPlaylistId: string, 
-    sourceIndex?: number, 
-    targetIndex?: number, 
-    commit?: boolean
-  ) => void;
-  addPlaylist: (name: string) => void;
+  moveTrackWithinPlaylist: (playlistId: string, fromIndex: number, toIndex: number) => void;
+  moveTrackToPlaylist: (track: Track, targetPlaylistId: string, fromPlaylistId: string) => void;
 }
 
 const PlaylistsContext = createContext<PlaylistsContextType | undefined>(undefined);
@@ -19,42 +15,76 @@ const PlaylistsContext = createContext<PlaylistsContextType | undefined>(undefin
 export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
-  const moveTrack = (
-    track: Track,
-    targetPlaylistId: string,
-    sourceIndex?: number,
-    targetIndex?: number,
-    commit = false
-  ) => {
-    setPlaylists((prev) => {
-      const newPlaylists = prev.map((playlist) => {
-        if (playlist.id === targetPlaylistId) {
-          // Если трек перемещается внутри плейлиста, меняем только порядок
-          const updatedTracks = [...playlist.tracks];
-          if (sourceIndex !== undefined && targetIndex !== undefined) {
-            updatedTracks.splice(targetIndex, 0, updatedTracks.splice(sourceIndex, 1)[0]);
-          } else {
-            updatedTracks.push(track);
-          }
+  const fetchPlaylists = async () => {
+    const response = await fetch('http://localhost:4000/playlists');
+    if (!response.ok) {
+      const data = await response.json();
+      setPlaylists(data);
+    } else {
+      console.error('Не удалось загрузить плейлисты');
+    }
+  };
 
-          // Если коммит включен, отправляем изменения на сервер
-          if (commit) {
-            fetch(`http://localhost:4000/playlists/${targetPlaylistId}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ tracks: updatedTracks }),
-            });
-          }
+  const updatePlaylists = async (playlist: Playlist) => {
+  try {
+    const response = await fetch(`http://localhost:4000/playlists/${playlist.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(playlist),
+    });
 
-          return { ...playlist, tracks: updatedTracks };
-        }
-        return playlist;
+    if (!response.ok) {
+      throw new Error('Ошибка при отправке плейлиста на сервер');
+    }
+
+    console.log(`Плейлист "${playlist.name}" обновлён`);
+  } catch (err) {
+    console.error('Ошибка отправки:', err);
+  }
+};
+
+
+  const moveTrackWithinPlaylist = (playlistId: string, fromIndex: number, toIndex: number) => {
+    setPlaylists(prev => {
+      return prev.map(playlist => {
+        if (playlist.id !== playlistId) return playlist;
+
+        const updatedTracks = [...playlist.tracks];
+        const [movedTrack] = updatedTracks.splice(fromIndex, 1);
+        updatedTracks.splice(toIndex, 0, movedTrack);
+
+        const updatedPlaylist = { ...playlist, tracks: updatedTracks };
+
+        updatePlaylists(updatedPlaylist);
+
+        return updatedPlaylist;
       });
-
-      return newPlaylists;
     });
   };
 
+  const moveTrackToPlaylist = (track: Track, targetPlaylistId: string, fromPlaylistId: string) => {
+    setPlaylists(prev => {
+      return prev.map(playlist => {
+        if (playlist.id === fromPlaylistId) {
+          return {
+            ...playlist,
+            tracks: playlist.tracks.filter(t => t.id !== track.id),
+          };
+        } else if (playlist.id === targetPlaylistId) {
+          return {
+            ...playlist,
+            tracks: [...playlist.tracks, track],
+          };
+        } else {
+          return playlist;
+        }
+      });
+    });    
+  };
+
+  // Доработать
   const addPlaylist = (name: string) => {
     const newPlaylist: Playlist = {
       id: Date.now().toString(),
@@ -66,7 +96,7 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   };
 
   return (
-    <PlaylistsContext.Provider value={{ playlists, setPlaylists, moveTrack, addPlaylist }}>
+    <PlaylistsContext.Provider value={{ playlists, fetchPlaylists, setPlaylists, updatePlaylists, moveTrackWithinPlaylist, moveTrackToPlaylist}}>
       {children}
     </PlaylistsContext.Provider>
   );

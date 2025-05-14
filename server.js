@@ -14,7 +14,6 @@ const playlistsPath = path.join(__dirname, 'public/playlists.json');
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/music', express.static(musicDir)); // Отдача музыки
 
 // Получить плейлисты
@@ -27,6 +26,32 @@ app.get('/playlists', (req, res) => {
     res.status(500).json({ error: 'Ошибка чтения плейлистов' });
   }
 });
+
+// Обновить конкретный плейлист по ID
+app.put('/playlists/:id', (req, res) => {
+  const playlistId = req.params.id;
+  const updatedPlaylist = req.body;
+
+  try {
+    const data = fs.readFileSync(playlistsPath, 'utf8');
+    const playlists = JSON.parse(data);
+
+    const index = playlists.findIndex(p => p.id === playlistId);
+    if (index === -1) {
+      return res.status(404).json({ error: 'Плейлист не найден' });
+    }
+
+    playlists[index] = updatedPlaylist;
+
+    fs.writeFileSync(playlistsPath, JSON.stringify(playlists, null, 2), 'utf8');
+
+    res.json({ message: 'Плейлист обновлён' });
+  } catch (err) {
+    console.error('Ошибка при обновлении плейлиста:', err);
+    res.status(500).json({ error: 'Ошибка обновления' });
+  }
+});
+
 
 // Синхронизация треков с файлами
 async function syncTracksWithFiles() {

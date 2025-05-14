@@ -4,23 +4,17 @@
     "name": "Любимые треки",
     "tracks": [
       {
-        "id": "t1",
-        "title": "Трек Один",
-        "artist": "Исполнитель A",
-        "duration": 1830
+        "id": "test",
+        "title": "Тестовый WAV",
+        "artist": "Тестовый Исполнитель",
+        "duration": 730
       },
       {
         "id": "first",
         "title": "Трек Два",
         "artist": "Исполнитель B",
         "duration": 60
-      },
-      {
-        "id": "test",
-        "title": "Тестовый WAV",
-        "artist": "Тестовый Исполнитель",
-        "duration": 730
-      }      
+      }
     ]
   },
   {

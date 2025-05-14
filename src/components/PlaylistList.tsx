@@ -1,5 +1,6 @@
 import React from 'react';
 import { Playlist } from '../types';
+import PlaylistListItem from './PlaylistListItem';
 
 interface PlaylistListProps {
   playlists: Playlist[];
@@ -10,11 +11,13 @@ export const PlaylistList: React.FC<PlaylistListProps> = ({ playlists, onSelect 
   return (
     <div className="playlist-list">
       <h2>Плейлисты</h2>
-      <ul>
+      <ul style={{ listStyle: 'none', padding: 0 }}>
         {playlists.map((playlist) => (
-          <li key={playlist.id} onClick={() => onSelect(playlist)}>
-            {playlist.name} ({playlist.tracks.length} треков)
-          </li>
+          <PlaylistListItem
+            key={playlist.id}
+            playlist={playlist}
+            onSelect={onSelect}
+          />
         ))}
       </ul>
     </div>

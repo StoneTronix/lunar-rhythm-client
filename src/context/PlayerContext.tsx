@@ -10,6 +10,7 @@ import { Howl } from 'howler';
 
 interface PlayerContextType {
   currentTrack: Track | null;
+  
   isPlaying: boolean;
   progress: number;
   playTrack: (track: Track) => void;  // Загрузка трека с сервера

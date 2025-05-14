@@ -1,29 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Playlist } from '../types';
+import { usePlaylists } from '../context/PlaylistsContext'
 import { PlaylistList } from '../components/PlaylistList';
 import PlaylistView from '../components/PlaylistView';
-
 import '../styles/Playlists.scss';
 
 const Playlists: React.FC = () => {
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(null);
-
-  // Получение плейлистов с сервера
+  const { playlists, fetchPlaylists } = usePlaylists();
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
+  const selectedPlaylist = playlists.find(p => p.id === selectedPlaylistId) || null;
+  
+  // Загружаем плейлисты при монтировании (если они ещё не загружены)
   useEffect(() => {
-    const fetchPlaylists = async () => {
-      const response = await fetch('http://localhost:4000/playlists');
-      if (response.ok) {
-        const data = await response.json();
-        setPlaylists(data);
-      } else {
-        console.error('Не удалось загрузить плейлисты');
-      }
-    };
+    if (!playlists.length) {
+      fetchPlaylists();
+    }
+  }, [playlists, fetchPlaylists]);
 
-    fetchPlaylists();
-  }, []);
+  
 
   return (
     <motion.div
@@ -35,7 +29,7 @@ const Playlists: React.FC = () => {
     >
       <h1>Мои Плейлисты</h1>
       <div className="content">
-        <PlaylistList playlists={playlists} onSelect={setSelectedPlaylist} />
+        <PlaylistList playlists={playlists} onSelect={(playlist) => setSelectedPlaylistId(playlist.id)} />
         {selectedPlaylist && <PlaylistView playlist={selectedPlaylist} />}
       </div>
     </motion.div>
