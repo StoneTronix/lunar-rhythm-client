@@ -32,7 +32,7 @@ const PlaylistView = forwardRef<HTMLDivElement, PlaylistViewProps>(({ playlist }
       className="playlist-view"
       style={{ backgroundColor: isOver ? '#f0f0f0' : 'white' }}
     >
-      <h2>{playlist.name}</h2>
+      <h2>{playlist.title}</h2>
       <div>
         {playlist.tracks.map((track, index) => (
           <TrackItem

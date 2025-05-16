@@ -7,7 +7,6 @@ export interface Track {
 
 export interface Playlist {
   id: string;
-  name: string;
-  createdAt: string;
+  title: string;
   tracks: Track[];  
 }

@@ -1,15 +1,31 @@
 import { Playlist } from '../utils/types'
 
 export async function fetchPlaylists(): Promise<Playlist[]> {
-  const res = await fetch('/api/playlists');
+  const res = await fetch('http://localhost:4000/playlists/');
   if (!res.ok) throw new Error('Не удалось загрузить плейлисты');
   return await res.json()
 }
 
 export async function updateTrackOrder(playlistId: string, trackOrder: string[]) {
-  await fetch(`/api/playlists/${playlistId}/tracks`, {
-    method: 'PATCH',
+  const res = await fetch(`http://localhost:4000/playlists/${playlistId}/tracks`, {
+    method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ trackOrder }),
   });
+  
+  if (!res.ok) {
+    throw new Error('Не удалось обновить порядок треков');
+  }
+  
+  return await res.json();
+}
+
+export async function createPlaylist(title: string): Promise<Playlist> {
+  const res = await fetch('http://localhost:4000/playlists/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title }),
+  });
+  if (!res.ok) throw new Error('Не удалось создать плейлист');
+  return await res.json();
 }

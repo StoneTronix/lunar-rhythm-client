@@ -4,7 +4,7 @@ const router = express.Router();
 
 // Получить все плейлисты с треками
 router.get('/', async (req, res) => {
-  const { rows: playlists } = await pool.query('SELECT * FROM playlists ORDER BY created_at');
+  const { rows: playlists } = await pool.query('SELECT * FROM playlists ORDER BY title');
 
   const result = [];
   for (const p of playlists) {
@@ -27,7 +27,7 @@ router.put('/:id', async (req, res) => {
   const { name, trackOrder } = req.body;
 
   // Обновление названия
-  await pool.query('UPDATE playlists SET name = $1 WHERE id = $2', [name, id]);
+  await pool.query('UPDATE playlists SET title = $1 WHERE id = $2', [name, id]);
 
   // Обновление треков (удалить старые и вставить заново)
   await pool.query('DELETE FROM playlist_tracks WHERE playlist_id = $1', [id]);

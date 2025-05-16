@@ -15,9 +15,7 @@ const Playlists: React.FC = () => {
     if (!playlists.length) {
       fetchPlaylists();
     }
-  }, [playlists, fetchPlaylists]);
-
-  
+  }, [playlists, fetchPlaylists]);  
 
   return (
     <motion.div

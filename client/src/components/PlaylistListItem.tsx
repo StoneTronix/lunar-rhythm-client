@@ -37,7 +37,7 @@ const PlaylistListItem: React.FC<PlaylistListItemProps> = ({ playlist, onSelect 
         borderRadius: '4px',
       }}
     >
-      {playlist.name} ({playlist.tracks.length} треков)
+      {playlist.title} ({playlist.tracks.length} треков)
     </li>
   );
 };

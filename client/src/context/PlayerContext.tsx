@@ -33,7 +33,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
 
     const sound = new Howl({
-      src: [`http://localhost:4000/music/${track.id}.wav`],
+      src: [`http://localhost:4000/playlists/track/${track.id}`],
       html5: true,      
       onend: () => {  // По окончании воспроизведения
         setIsPlaying(false)
@@ -86,7 +86,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         pause,
         togglePlay,
         setCurrentTrack,
-        setProgress        
+        setProgress
       }}
     >
       {children}

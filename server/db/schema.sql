@@ -1,24 +1,16 @@
--- Удалить таблицы и все связанные с ними объекты
-DROP TABLE IF EXISTS playlist_tracks CASCADE;
-DROP TABLE IF EXISTS tracks CASCADE;
-DROP TABLE IF EXISTS playlists CASCADE;
-
--- Создать плейлисты
 CREATE TABLE playlists (
-  id UUID PRIMARY KEY,
-  name TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT UNIQUE NOT NULL,
 );
 
--- Создать треки
 CREATE TABLE tracks (
-  id UUID PRIMARY KEY,
-  title TEXT NOT NULL,
-  artist TEXT NOT NULL,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  file_path TEXT NOT NULL,
+  title TEXT,
+  artist TEXT,
   duration INTEGER NOT NULL
 );
 
--- Связь треков и плейлистов
 CREATE TABLE playlist_tracks (
   playlist_id UUID REFERENCES playlists(id) ON DELETE CASCADE,
   track_id UUID REFERENCES tracks(id) ON DELETE CASCADE,
