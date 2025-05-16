@@ -5,18 +5,20 @@ import React, {
   useRef,
   useEffect,
 } from 'react';
-import { Track, Playlist } from '../utils/types';
+import { Track } from '../utils/types';
 import { Howl } from 'howler';
 
 interface PlayerContextType {
-  currentTrack: Track | null;  
+  currentTrack: Track | null;
   isPlaying: boolean;
   progress: number;
-  playTrack: (track: Track) => void;  // Загрузка трека с сервера
-  pause: () => void;                  // Пауза текущего трека
-  togglePlay: () => void;             // Логика переключателя паузы
-  setCurrentTrack: (track: Track | null) => void;
+  duration: number;
+  audioRef: React.RefObject<Howl | null>;
+  playTrack: (track: Track) => void;
+  pause: () => void;
+  togglePlay: () => void;
   setProgress: (value: number) => void;
+  seekTo: (position: number) => void;
 }
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -25,55 +27,83 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
   const audioRef = useRef<Howl | null>(null);
 
   const playTrack = (track: Track) => {
+    // Остановить текущее воспроизведение, если есть
     if (audioRef.current) {
       audioRef.current.unload();
     }
 
     const sound = new Howl({
       src: [`http://localhost:4000/playlists/track/${track.id}`],
-      html5: true,      
-      onend: () => {  // По окончании воспроизведения
-        setIsPlaying(false)
-        setProgress(0);        
+      html5: true,
+      onload: () => {
+        setDuration(sound.duration());
+      },
+      onplay: () => {
+        setIsPlaying(true);
+        setCurrentTrack(track);
+      },
+      onend: () => {
+        setIsPlaying(false);
+        setProgress(0);
+      },
+      onpause: () => setIsPlaying(false),
+      onstop: () => {
+        setIsPlaying(false);
+        setProgress(0);
       },
     });
 
     audioRef.current = sound;
-    setCurrentTrack(track);
     sound.play();
-    setIsPlaying(true);
   };
 
   const pause = () => {
     if (audioRef.current) {
       audioRef.current.pause();
-      setIsPlaying(false);
     }
   };
 
   const togglePlay = () => {
     if (!audioRef.current) return;
+    
     if (isPlaying) {
       pause();
     } else {
       audioRef.current.play();
-      setIsPlaying(true);
+    }
+  };
+
+  const seekTo = (position: number) => {
+    if (audioRef.current) {
+      audioRef.current.seek(position);
+      setProgress(position);
     }
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    let animationFrameId: number;
+
+    const updateProgress = () => {
       if (audioRef.current && isPlaying) {
         const seek = audioRef.current.seek();
         if (typeof seek === 'number') {
           setProgress(seek);
         }
+        animationFrameId = requestAnimationFrame(updateProgress);
       }
-    }, 1000);
-    return () => clearInterval(interval);
+    };
+
+    if (isPlaying) {
+      animationFrameId = requestAnimationFrame(updateProgress);
+    }
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
   }, [isPlaying]);
 
   return (
@@ -82,11 +112,13 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         currentTrack,
         isPlaying,
         progress,
+        duration,
+        audioRef,
         playTrack,
         pause,
         togglePlay,
-        setCurrentTrack,
-        setProgress
+        setProgress,
+        seekTo
       }}
     >
       {children}

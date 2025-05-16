@@ -10,38 +10,37 @@ const formatTime = (time: number) => {
 };
 
 const ProgressBar: React.FC = () => {
-  const { progress, currentTrack, setProgress } = usePlayer();
-  if (!currentTrack) return;
-  const duration = currentTrack.duration;
+  const { 
+    progress, 
+    duration, 
+    currentTrack, 
+    seekTo,
+    isPlaying
+  } = usePlayer();
+  
+  if (!currentTrack || !isPlaying) return null;
 
-  const handleChange = (value: number[]) => {
-    if (!currentTrack || !value.length) return;
-    const newTime = value[0];
-    setProgress(newTime);
-    const sound = (window as any).Howler?._howls?.find((h: any) => h._src.includes(currentTrack.id));
-    if (sound) {
-      sound.seek(newTime);
-    }
+  const handleValueChange = (values: number[]) => {
+    const newPosition = values[0];
+    seekTo(newPosition);
   };
-
-  if (!currentTrack) return null;
 
   return (
     <div className="progress-bar">
-      <span>{formatTime(progress)}</span>      
+      <span className="time">{formatTime(progress)}</span>
       <Slider.Root
-        className="SliderRoot"
+        className="slider-root"
         value={[progress]}
         max={duration}
-        step={1}
-        onValueChange={handleChange}
+        step={0.1}
+        onValueChange={handleValueChange}
       >
-        <Slider.Track className="SliderTrack">
-          <Slider.Range className="SliderRange" />
+        <Slider.Track className="slider-track">
+          <Slider.Range className="slider-range" />
         </Slider.Track>
-        <Slider.Thumb className="SliderThumb" aria-label="Time" />
-      </Slider.Root>      
-      <span>{formatTime(duration)}</span>
+        <Slider.Thumb className="slider-thumb" />
+      </Slider.Root>
+      <span className="time">{formatTime(duration)}</span>
     </div>
   );
 };
