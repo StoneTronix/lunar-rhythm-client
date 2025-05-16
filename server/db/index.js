@@ -5,7 +5,7 @@ const pool = new Pool({
   user: process.env.DB_USER, 
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD, // 2. Пароль не в коде
+  password: process.env.DB_PASSWORD,
   port: parseInt(process.env.DB_PORT),  
   // ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false // 4. Для прода
 });
