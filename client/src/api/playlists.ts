@@ -29,3 +29,13 @@ export async function createPlaylist(title: string): Promise<Playlist> {
   if (!res.ok) throw new Error('Не удалось создать плейлист');
   return await res.json();
 }
+
+export async function deletePlaylist(playlistId: string): Promise<void> {
+  const response = await fetch(`http://localhost:4000/playlists/${playlistId}`, {
+    method: 'DELETE',
+  });
+  
+  if (!response.ok) {
+    throw new Error('Не удалось удалить плейлист');
+  }
+}

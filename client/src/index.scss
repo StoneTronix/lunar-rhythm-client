@@ -1,11 +1,12 @@
 @use './styles/variables' as *;
 @use './styles/mixins' as *;
+@use './styles/theme' as *;
 
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: theme-var('bg-primary');
-  color: theme-var('text-primary');
+  background-color: var(--bg-primary);
+  color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 

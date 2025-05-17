@@ -1,17 +1,18 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Playlist, Track } from '../utils/types';
-import { fetchPlaylists as fetchPlaylistsFromAPI, createPlaylist as createPlaylistAPI, updateTrackOrder } from '../api/playlists';
+import { fetchPlaylists as fetchPlaylistsFromAPI, createPlaylist as createPlaylistAPI, updateTrackOrder, deletePlaylist as deletePlaylistAPI } from '../api/playlists';
 
 
 interface PlaylistsContextType {
   playlists: Playlist[];
   fetchPlaylists: () => void;
   createPlaylist: (title: string) => Promise<void>;
+  deletePlaylist: (id: string) => Promise<void>;
   updatePlaylists: (playlist: Playlist) => Promise<void>;
   setPlaylists: React.Dispatch<React.SetStateAction<Playlist[]>>;
   moveTrackWithinPlaylist: (playlistId: string, fromIndex: number, toIndex: number) => void;
   moveTrackToPlaylist: (track: Track, targetPlaylistId: string, fromPlaylistId: string) => void;
-  updateTrackPlaylists: (trackId: string, playlistIds: string[]) => Promise<void>;
+  updateTrackPlaylists: (trackId: string, playlistIds: string[]) => Promise<void>;  
 }
 
 const PlaylistsContext = createContext<PlaylistsContextType | undefined>(undefined);
@@ -60,21 +61,20 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const moveTrackWithinPlaylist = async (playlistId: string, fromIndex: number, toIndex: number) => {
     setPlaylists(prev => {
-      return prev.map(playlist => {
-        if (playlist.id !== playlistId) return playlist;
+      return prev.map(p => {
+        if (p.id !== playlistId) return p;
 
-        const updatedTracks = [...playlist.tracks];
+        const updatedTracks = [...p.tracks];
         const [movedTrack] = updatedTracks.splice(fromIndex, 1);
         updatedTracks.splice(toIndex, 0, movedTrack);
-
-        // Обновляем позиции в UI сразу
-        const updatedPlaylist = { ...playlist, tracks: updatedTracks };
+        
+        const updatedPlaylist = { ...p, tracks: updatedTracks };  // Обновляем позиции в UI сразу
 
         // Отправляем новый порядок на сервер
         updateTrackOrder(playlistId, updatedTracks.map(t => t.id))
           .catch(err => {
             console.error('Ошибка при обновлении порядка:', err);
-            // Можно добавить откат состояния, если нужно
+            // Можно добавить откат состояния
           });
 
         return updatedPlaylist;
@@ -90,17 +90,17 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         if (p.id === fromPlaylistId) {
           const newTracks = p.tracks.filter(t => t.id !== track.id);
           const updatedPlaylist = { ...p, tracks: newTracks };
-          updatePlaylists(updatedPlaylist); // ✅ Отправляем
+          updatePlaylists(updatedPlaylist); // Отправляем
           return updatedPlaylist;
         }
 
         if (p.id === targetPlaylistId) {
-          const fromPlaylist = prev.find(pl => pl.id === fromPlaylistId);
+          const fromPlaylist = prev.find(p => p.id === fromPlaylistId);
           const movedTrack = fromPlaylist?.tracks.find(t => t.id === track.id);
         if (!movedTrack) return p;
 
           const updatedPlaylist = { ...p, tracks: [...p.tracks, movedTrack] };
-          updatePlaylists(updatedPlaylist); // ✅ Отправляем
+          updatePlaylists(updatedPlaylist); // Отправляем
           return updatedPlaylist;
         }
 
@@ -123,7 +123,6 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         const targetTrack = prev
           .flatMap(p => p.tracks)
           .find(t => t.id === trackId); // Находим трек по ID
-
         return prev.map(playlist => ({
           ...playlist,
           tracks: playlistIds.includes(playlist.id)
@@ -140,8 +139,20 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   };
 
+  const deletePlaylist = async (id: string) => {
+    try {      
+      await deletePlaylistAPI(id);
+      setPlaylists(prev => prev.filter(p => p.id !== id)); 
+    } catch (error) {
+    // Откатываем изменения при ошибке
+      setPlaylists(prev => [...prev]);
+      console.error('Ошибка удаления:', error);
+      throw error; // Пробрасываем ошибку для обработки в UI
+    }
+  };
+
   return (
-    <PlaylistsContext.Provider value={{ playlists, createPlaylist, fetchPlaylists, setPlaylists, updatePlaylists, moveTrackWithinPlaylist, moveTrackToPlaylist, updateTrackPlaylists}}>
+    <PlaylistsContext.Provider value={{ playlists, deletePlaylist, createPlaylist, fetchPlaylists, setPlaylists, updatePlaylists, moveTrackWithinPlaylist, moveTrackToPlaylist, updateTrackPlaylists}}>
       {children}
     </PlaylistsContext.Provider>
   );

@@ -9,19 +9,17 @@ interface PlaylistViewProps {
 }
 
 const PlaylistView = forwardRef<HTMLDivElement, PlaylistViewProps>(({ playlist }, ref) => { 
-
   return (
-    <div      
-      className="playlist-view"
+    <div className="playlist-view"
       style={{ backgroundColor : 'white' }}
     >
       <h2>{playlist.title}</h2>
       <div>
         {playlist.tracks.map((track, index) => (
           <TrackItem
+          index={index}
             key={track.id}
-            track={track}
-            index={index}
+            track={track}            
             playlistId={playlist.id}
           />
         ))}

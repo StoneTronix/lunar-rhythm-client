@@ -11,11 +11,10 @@ import { Howl } from 'howler';
 interface PlayerContextType {
   currentTrack: Track | null;
   isPlaying: boolean;
-  progress: number;
   duration: number;
+  progress: number;  
   audioRef: React.RefObject<Howl | null>;
   playTrack: (track: Track) => void;
-  pause: () => void;
   togglePlay: () => void;
   setProgress: (value: number) => void;
   seekTo: (position: number) => void;
@@ -50,28 +49,18 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setIsPlaying(false);
         setProgress(0);
       },
-      onpause: () => setIsPlaying(false),
-      onstop: () => {
-        setIsPlaying(false);
-        setProgress(0);
-      },
+      onpause: () => setIsPlaying(false)
     });
 
     audioRef.current = sound;
     sound.play();
   };
 
-  const pause = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-  };
-
   const togglePlay = () => {
     if (!audioRef.current) return;
     
     if (isPlaying) {
-      pause();
+      audioRef.current.pause();
     } else {
       audioRef.current.play();
     }
@@ -115,7 +104,6 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         duration,
         audioRef,
         playTrack,
-        pause,
         togglePlay,
         setProgress,
         seekTo

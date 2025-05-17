@@ -18,7 +18,7 @@ const ProgressBar: React.FC = () => {
     isPlaying
   } = usePlayer();
   
-  if (!currentTrack || !isPlaying) return null;
+  if (!currentTrack) return null;
 
   const handleValueChange = (values: number[]) => {
     const newPosition = values[0];

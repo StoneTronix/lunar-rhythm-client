@@ -6,28 +6,10 @@ const path = require('path');
 
 const MUSIC_DIR = path.join(__dirname, '../music');
 
-// Получить список плейлистов с треками
-router.get('/', async (req, res) => {
-  const { rows: playlists } = await pool.query('SELECT * FROM playlists ORDER BY title');
-
-  const result = [];
-  for (const p of playlists) {
-    const { rows: tracks } = await pool.query(`
-      SELECT t.*, pt.position FROM playlist_tracks pt
-      JOIN tracks t ON t.id = pt.track_id
-      WHERE pt.playlist_id = $1
-      ORDER BY pt.position
-    `, [p.id]);
-
-    result.push({ ...p, tracks });
-  }
-
-  res.json(result);
-});
-
 // Создать новый плейлист
 router.post('/', async (req, res) => {
   const { title } = req.body;
+  
   try {
     const { rows: [playlist] } = await pool.query(
       `INSERT INTO playlists (id, title)
@@ -42,8 +24,42 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Удалить плейлист
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  const client = await pool.connect();
 
-// Получить список файл трека по id
+  try {
+    await client.query('BEGIN');
+    
+    // Проверяем существование плейлиста
+    const { rows } = await client.query(
+      'SELECT id FROM playlists WHERE id = $1',
+      [id]
+    );
+    
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Плейлист не найден' });
+    }
+
+    // Удаляем (каскадное удаление связей произойдет автоматически)
+    await client.query(
+      'DELETE FROM playlists WHERE id = $1',
+      [id]
+    );
+    
+    await client.query('COMMIT');
+    res.json({ message: 'Плейлист удален' });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    console.error('Ошибка при удалении плейлиста:', error);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  } finally {
+    client.release();
+  }
+});
+
+// Получить файл трека по id
 router.get('/track/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -63,9 +79,8 @@ router.get('/track/:id', async (req, res) => {
     // Проверка, существует ли файл
     if (!fs.existsSync(absolutePath)) {
       return res.status(404).json({ error: 'Файл не найден на сервере' });
-    }
-
-    res.sendFile(absolutePath);
+    } 
+    res.sendFile(absolutePath);     
   } catch (error) {
     console.error('Ошибка при получении трека:', error);
     res.status(500).json({ error: 'Ошибка сервера' });
@@ -83,10 +98,8 @@ router.put('/:id/tracks', async (req, res) => {
 
   const client = await pool.connect();
   try {
-    await client.query('BEGIN');
-
-    // Упорядочиваем треки по ID перед обновлением
-    const orderedTrackIds = [...trackOrder].sort();
+    await client.query('BEGIN');    
+    const orderedTrackIds = [...trackOrder].sort(); // Упорядочиваем треки по ID перед обновлением    
     
     // Сначала блокируем все нужные строки в определенном порядке
     await client.query(
@@ -135,7 +148,7 @@ router.put('/:id/tracks', async (req, res) => {
   }
 });
 
-// Обновление плейлистов для трека
+// Изменение плейлистов для трека
 router.put('/tracks/:trackId/playlists', async (req, res) => {
   const { trackId } = req.params;
   const { playlistIds } = req.body;
@@ -173,6 +186,24 @@ router.put('/tracks/:trackId/playlists', async (req, res) => {
   } finally {
     client.release();
   }
+});
+
+// Получить всё (список плейлистов с треками)
+router.get('/', async (req, res) => {
+  const { rows: playlists } = await pool.query('SELECT * FROM playlists ORDER BY title');
+
+  const result = [];
+  for (const p of playlists) {
+    const { rows: tracks } = await pool.query(`
+      SELECT t.*, pt.position FROM playlist_tracks pt
+      JOIN tracks t ON t.id = pt.track_id
+      WHERE pt.playlist_id = $1
+      ORDER BY pt.position
+    `, [p.id]);
+
+    result.push({ ...p, tracks });
+  }
+  res.json(result);
 });
 
 module.exports = router;

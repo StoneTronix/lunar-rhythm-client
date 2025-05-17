@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
-// Получение всех уникальных треков
+// Получить все треки
 router.get('/', async (req, res) => {
   try {
     const { rows } = await pool.query(`
