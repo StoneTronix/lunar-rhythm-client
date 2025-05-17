@@ -27,14 +27,5 @@ $accent-colors: (
   secondary: #ff5722,
   success: #4caf50,
   purple: #9c27b0,
-  custom: #ff00ff // Пример добавления нового цвета
+  custom: #ff00ff
 );
-
-// Функции
-@function theme-var($key) {
-  @return var(--#{$key});
-}
-
-@function accent-color($name) {
-  @return var(--color-#{$name});
-}
