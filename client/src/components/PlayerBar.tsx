@@ -3,7 +3,7 @@ import { usePlayer } from '../context/PlayerContext';
 import ProgressBar from './ProgressBar';
 import '../styles/PlayerBar.scss';
 
-export const PlayerBar: React.FC = () => {
+const PlayerBar: React.FC = () => {
   const { currentTrack, isPlaying, togglePlay } = usePlayer();
 
   if (!currentTrack) return null;
@@ -20,3 +20,5 @@ export const PlayerBar: React.FC = () => {
     </div>
   );
 };
+
+export default PlayerBar;

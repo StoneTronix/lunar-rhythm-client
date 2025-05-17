@@ -135,4 +135,44 @@ router.put('/:id/tracks', async (req, res) => {
   }
 });
 
+// Обновление плейлистов для трека
+router.put('/tracks/:trackId/playlists', async (req, res) => {
+  const { trackId } = req.params;
+  const { playlistIds } = req.body;
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    // Удаляем все существующие связи трека с плейлистами
+    await client.query(
+      'DELETE FROM playlist_tracks WHERE track_id = $1',
+      [trackId]
+    );
+
+    // Добавляем новые связи
+    for (const playlistId of playlistIds) {
+      // Получаем максимальную позицию в плейлисте
+      const { rows: [{ max }] } = await client.query(
+        'SELECT COALESCE(MAX(position), 0) as max FROM playlist_tracks WHERE playlist_id = $1',
+        [playlistId]
+      );
+
+      await client.query(
+        'INSERT INTO playlist_tracks (playlist_id, track_id, position) VALUES ($1, $2, $3)',
+        [playlistId, trackId, max + 1]
+      );
+    }
+
+    await client.query('COMMIT');
+    res.json({ message: 'Плейлисты трека обновлены' });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    console.error('Ошибка при обновлении плейлистов трека:', error);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  } finally {
+    client.release();
+  }
+});
+
 module.exports = router;

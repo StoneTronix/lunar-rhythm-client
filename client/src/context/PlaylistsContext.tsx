@@ -11,6 +11,7 @@ interface PlaylistsContextType {
   setPlaylists: React.Dispatch<React.SetStateAction<Playlist[]>>;
   moveTrackWithinPlaylist: (playlistId: string, fromIndex: number, toIndex: number) => void;
   moveTrackToPlaylist: (track: Track, targetPlaylistId: string, fromPlaylistId: string) => void;
+  updateTrackPlaylists: (trackId: string, playlistIds: string[]) => Promise<void>;
 }
 
 const PlaylistsContext = createContext<PlaylistsContextType | undefined>(undefined);
@@ -18,6 +19,7 @@ const PlaylistsContext = createContext<PlaylistsContextType | undefined>(undefin
 export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
+  // Получить все плейлисты
   const fetchPlaylists = async () => {
     try {
       const data = await fetchPlaylistsFromAPI();
@@ -37,49 +39,48 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 };
 
   const updatePlaylists = async (playlist: Playlist) => {
-  try {
-    const response = await fetch(`http://localhost:4000/playlists/${playlist.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(playlist),
-    });
+    try {
+      const response = await fetch(`http://localhost:4000/playlists/${playlist.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(playlist),
+      });
 
-    if (!response.ok) {
-      throw new Error('Ошибка при отправке плейлиста на сервер');
+      if (!response.ok) {
+        throw new Error('Ошибка при отправке плейлиста на сервер');
+      }
+
+      console.log(`Плейлист "${playlist.title}" обновлён`);
+    } catch (err) {
+      console.error('Ошибка отправки:', err);
     }
+  };
 
-    console.log(`Плейлист "${playlist.title}" обновлён`);
-  } catch (err) {
-    console.error('Ошибка отправки:', err);
-  }
-};
+  const moveTrackWithinPlaylist = async (playlistId: string, fromIndex: number, toIndex: number) => {
+    setPlaylists(prev => {
+      return prev.map(playlist => {
+        if (playlist.id !== playlistId) return playlist;
 
+        const updatedTracks = [...playlist.tracks];
+        const [movedTrack] = updatedTracks.splice(fromIndex, 1);
+        updatedTracks.splice(toIndex, 0, movedTrack);
 
-const moveTrackWithinPlaylist = async (playlistId: string, fromIndex: number, toIndex: number) => {
-  setPlaylists(prev => {
-    return prev.map(playlist => {
-      if (playlist.id !== playlistId) return playlist;
+        // Обновляем позиции в UI сразу
+        const updatedPlaylist = { ...playlist, tracks: updatedTracks };
 
-      const updatedTracks = [...playlist.tracks];
-      const [movedTrack] = updatedTracks.splice(fromIndex, 1);
-      updatedTracks.splice(toIndex, 0, movedTrack);
+        // Отправляем новый порядок на сервер
+        updateTrackOrder(playlistId, updatedTracks.map(t => t.id))
+          .catch(err => {
+            console.error('Ошибка при обновлении порядка:', err);
+            // Можно добавить откат состояния, если нужно
+          });
 
-      // Обновляем позиции в UI сразу
-      const updatedPlaylist = { ...playlist, tracks: updatedTracks };
-
-      // Отправляем новый порядок на сервер
-      updateTrackOrder(playlistId, updatedTracks.map(t => t.id))
-        .catch(err => {
-          console.error('Ошибка при обновлении порядка:', err);
-          // Можно добавить откат состояния, если нужно
-        });
-
-      return updatedPlaylist;
+        return updatedPlaylist;
+      });
     });
-  });
-};
+  };
 
   const moveTrackToPlaylist = (track: Track, targetPlaylistId: string, fromPlaylistId: string) => {
     setPlaylists(prev => {
@@ -103,16 +104,44 @@ const moveTrackWithinPlaylist = async (playlistId: string, fromIndex: number, to
           return updatedPlaylist;
         }
 
-      return p;
-      
-      
-    });
-   return updated;
+        return p;      
+      });
+      return updated;
     });    
   };
 
+  const updateTrackPlaylists = async (trackId: string, playlistIds: string[]) => {       
+    try {
+      await fetch(`http://localhost:4000/playlists/tracks/${trackId}/playlists`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ playlistIds }),
+      });
+      
+      // Обновляем локальное состояние
+      setPlaylists(prev => {
+        const targetTrack = prev
+          .flatMap(p => p.tracks)
+          .find(t => t.id === trackId); // Находим трек по ID
+
+        return prev.map(playlist => ({
+          ...playlist,
+          tracks: playlistIds.includes(playlist.id)
+            ? playlist.tracks.some(t => t.id === trackId)
+              ? playlist.tracks
+              : targetTrack 
+                ? [...playlist.tracks, targetTrack] 
+                : playlist.tracks
+            : playlist.tracks.filter(t => t.id !== trackId)
+        }));
+      });
+    } catch (error) {
+      console.error('Ошибка при обновлении плейлистов трека:', error);
+    }
+  };
+
   return (
-    <PlaylistsContext.Provider value={{ playlists, createPlaylist, fetchPlaylists, setPlaylists, updatePlaylists, moveTrackWithinPlaylist, moveTrackToPlaylist}}>
+    <PlaylistsContext.Provider value={{ playlists, createPlaylist, fetchPlaylists, setPlaylists, updatePlaylists, moveTrackWithinPlaylist, moveTrackToPlaylist, updateTrackPlaylists}}>
       {children}
     </PlaylistsContext.Provider>
   );

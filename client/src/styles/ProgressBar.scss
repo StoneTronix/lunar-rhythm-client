@@ -1,3 +1,5 @@
+@use './variables' as *;
+
 .progress-bar {
   display: flex;
   align-items: center;
@@ -32,7 +34,7 @@
 
   .slider-range {
     position: absolute;
-    background-color: #1db954;
+    background-color: accent-color('primary');
     border-radius: 9999px;
     height: 100%;
   }

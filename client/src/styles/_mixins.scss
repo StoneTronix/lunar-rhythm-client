@@ -8,3 +8,9 @@
   align-items: center;
   flex-direction: $direction;
 }
+
+@mixin theme-variables($theme) {
+  @each $key, $value in map-get($themes, $theme) {
+    --#{$key}: #{$value};
+  }
+}
