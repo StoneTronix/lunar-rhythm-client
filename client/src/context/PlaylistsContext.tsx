@@ -31,14 +31,24 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   };
 
   const createPlaylist = async (title: string) => {
-  try {
-    const newPlaylist = await createPlaylistAPI(title);
-    setPlaylists(prev => [...prev, { ...newPlaylist, tracks: [] }]);
-  } catch (err) {
-    console.error('Ошибка создания плейлиста:', err);
-  }
-};
+    try {
+      const newPlaylist = await createPlaylistAPI(title);
+      setPlaylists(prev => [...prev, { ...newPlaylist, tracks: [] }]);
+    } catch (err) {
+      console.error('Ошибка создания плейлиста:', err);
+    }
+  };
 
+  const deletePlaylist = async (id: string) => {
+    try {      
+      await deletePlaylistAPI(id);
+      fetchPlaylists();
+    } catch (error) {    
+      setPlaylists(prev => [...prev]);  // Откатываем изменения при ошибке
+      console.error('Ошибка удаления:', error);
+      throw error; // Пробрасываем ошибку для обработки в UI
+    }
+  };
   const updatePlaylists = async (playlist: Playlist) => {
     try {
       const response = await fetch(`http://localhost:4000/playlists/${playlist.id}`, {
@@ -137,19 +147,7 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     } catch (error) {
       console.error('Ошибка при обновлении плейлистов трека:', error);
     }
-  };
-
-  const deletePlaylist = async (id: string) => {
-    try {      
-      await deletePlaylistAPI(id);
-      setPlaylists(prev => prev.filter(p => p.id !== id)); 
-    } catch (error) {
-    // Откатываем изменения при ошибке
-      setPlaylists(prev => [...prev]);
-      console.error('Ошибка удаления:', error);
-      throw error; // Пробрасываем ошибку для обработки в UI
-    }
-  };
+  };  
 
   return (
     <PlaylistsContext.Provider value={{ playlists, deletePlaylist, createPlaylist, fetchPlaylists, setPlaylists, updatePlaylists, moveTrackWithinPlaylist, moveTrackToPlaylist, updateTrackPlaylists}}>

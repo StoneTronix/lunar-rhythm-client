@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import '../styles/Navbar.scss';
+import './navbar.scss';
 
 const Navbar: React.FC = () => {
   return (

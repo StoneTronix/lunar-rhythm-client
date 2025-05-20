@@ -1,7 +1,7 @@
 import React from 'react';
-import { usePlayer } from '../context/PlayerContext';
-import ProgressBar from './ProgressBar';
-import '../styles/PlayerBar.scss';
+import { usePlayer } from '../../context/PlayerContext';
+import ProgressBar from '../ProgressBar';
+import './PlayerBar.scss';
 
 const PlayerBar: React.FC = () => {
   const { currentTrack, isPlaying, togglePlay } = usePlayer();

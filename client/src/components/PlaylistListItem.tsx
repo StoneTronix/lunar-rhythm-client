@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Playlist } from '../utils/types';
-import { deletePlaylist } from '../api/playlists';
+import { usePlaylists } from '../context/PlaylistsContext';
 
 interface PlaylistListItemProps {
   playlist: Playlist;
@@ -8,8 +8,9 @@ interface PlaylistListItemProps {
 }
 
 const PlaylistListItem: React.FC<PlaylistListItemProps> = ({ playlist, onSelect }) => {
-  const [isConfirming, setIsConfirming] = React.useState(false);
-
+  const [isConfirming, setIsConfirming] = useState(false);
+  const { deletePlaylist } = usePlaylists();  
+  
   const handleDelete = async () => {
     try {
       await deletePlaylist(playlist.id);
@@ -18,7 +19,7 @@ const PlaylistListItem: React.FC<PlaylistListItemProps> = ({ playlist, onSelect 
       alert('Не удалось удалить плейлист');
     }
   };
-  
+
   return (
     <li
       onClick={() => onSelect(playlist)}
@@ -35,7 +36,7 @@ const PlaylistListItem: React.FC<PlaylistListItemProps> = ({ playlist, onSelect 
       <div className="playlist-actions">
           {isConfirming ? (
             <>
-              <button onClick={handleDelete} className="danger">
+              <button onClick={ handleDelete } className="danger">
                 Подтвердить
               </button>
               <button onClick={() => setIsConfirming(false)}>

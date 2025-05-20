@@ -1,5 +1,5 @@
-@use './variables' as *;
-@use './mixins' as *;
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
 
 .navbar {
   @include flex-center(row);
@@ -10,7 +10,7 @@
 }
 
 .navbar a {
-  color: $text-light;
+  color: var(--text-primary);
   text-decoration: none;
   font-weight: 500;
   @include transition(transform, color);

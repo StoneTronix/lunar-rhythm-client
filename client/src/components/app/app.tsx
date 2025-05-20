@@ -1,20 +1,19 @@
-// src/App.tsx
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-
-import Home from './pages/Home';
-import Library from './pages/Library';
-import Playlists from './pages/Playlists';
-import Settings from './pages/Settings';
-import Navbar from './components/Navbar';
-import PlayerBar from './components/PlayerBar';
-
-import { ThemeProvider } from './context/ThemeContext';
-import { PlayerProvider } from './context/PlayerContext';
-import { PlaylistsProvider } from './context/PlaylistsContext';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+
+import Home from '../../pages/Home';
+import Library from '../../pages/Library';
+import Playlists from '../../pages/Playlists';
+import Settings from '../../pages/Settings';
+import Navbar from '../navbar/Navbar';
+import PlayerBar from '../player-bar/player-bar';
+
+import { ThemeProvider } from '../../context/ThemeContext';
+import { PlayerProvider } from '../../context/PlayerContext';
+import { PlaylistsProvider } from '../../context/PlaylistsContext';
 
 const App: React.FC = () => {
   const location = useLocation();

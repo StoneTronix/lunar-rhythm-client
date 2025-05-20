@@ -3,7 +3,7 @@ import React, {
   useContext,
   useState,
   useRef,
-  useEffect,
+  useEffect
 } from 'react';
 import { Track } from '../utils/types';
 import { Howl } from 'howler';
