@@ -1,8 +1,8 @@
 import { forwardRef } from 'react';
 import { useDrop } from 'react-dnd';
-import { Track, Playlist } from '../utils/types';
-import { usePlaylists } from '../context/PlaylistsContext';
-import TrackItem from './TrackItem';
+import { Track, Playlist } from '../../utils/types';
+import { usePlaylists } from '../../contexts/PlaylistsContext';
+import TrackItem from '../TrackItem/TrackItem';
 
 interface PlaylistViewProps {
   playlist: Playlist;

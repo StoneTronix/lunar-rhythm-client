@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { Track } from '../utils/types';
-import { usePlayer } from '../context/PlayerContext';
-import { usePlaylists } from '../context/PlaylistsContext';
-import PlaylistSelectorModal from './PlaylistSelectorModal'
+import { Track } from '../../utils/types';
+import { usePlayer } from '../../contexts/PlayerContext';
+import { usePlaylists } from '../../contexts/PlaylistsContext';
+import PlaylistSelectorModal from '../ui/PlaylistSelectorModal/PlaylistSelectorModal'
 
 interface Props {
   index: number;

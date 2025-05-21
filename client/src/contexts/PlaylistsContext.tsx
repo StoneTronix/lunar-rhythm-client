@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Playlist, Track } from '../utils/types';
-import { fetchPlaylists as fetchPlaylistsFromAPI, createPlaylist as createPlaylistAPI, updateTrackOrder, deletePlaylist as deletePlaylistAPI } from '../api/playlists';
+import { fetchPlaylists as fetchPlaylistsFromAPI, createPlaylist as createPlaylistAPI, updateTrackOrder, deletePlaylist as deletePlaylistAPI } from '../api/player-api';
 
 
 interface PlaylistsContextType {

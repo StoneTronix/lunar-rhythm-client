@@ -1,6 +1,7 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -9,15 +10,6 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
     clean: true,
-  },
-  devServer: {
-    static: './dist',
-    historyApiFallback: true, // для React Router
-    port: 8080,
-    open: true,
-  },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
   },
   module: {
     rules: [
@@ -46,4 +38,24 @@ module.exports = {
     }),
     new Dotenv(),
   ],
+  resolve: {    
+    extensions: [
+      '.js',
+      '.jsx',
+      '.ts',
+      '.tsx',
+      '.json',
+      '.css',
+      '.scss',
+    ],
+    plugins: [
+      new TsconfigPathsPlugin(),
+    ],
+  },
+  devServer: {
+    static: './dist',
+    historyApiFallback: true, // для React Router
+    port: 8080,
+    open: true,
+  },
 };

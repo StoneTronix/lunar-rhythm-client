@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { PlaylistCheckbox } from '../utils/types';
-import '../styles/PlaylistSelectorModal.scss'
+import React, { useState } from 'react';
+import { PlaylistCheckbox } from '../../../utils/types';
+import './PlaylistSelectorModal.scss'
 
 interface PlaylistSelectorModalProps {
   trackId: string;

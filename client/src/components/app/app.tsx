@@ -4,16 +4,17 @@ import { AnimatePresence } from 'framer-motion';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import Home from '../../pages/Home';
-import Library from '../../pages/Library';
-import Playlists from '../../pages/Playlists';
-import Settings from '../../pages/Settings';
-import Navbar from '../navbar/Navbar';
-import PlayerBar from '../player-bar/player-bar';
+import Home from '@pages/Home/Home';
+import Library from '@pages/Library/Library';
+import Playlists from '@pages/Playlists/Playlists';
+import Settings from '@pages/Settings/Settings';
 
-import { ThemeProvider } from '../../context/ThemeContext';
-import { PlayerProvider } from '../../context/PlayerContext';
-import { PlaylistsProvider } from '../../context/PlaylistsContext';
+import Navbar from '../Navbar/navbar';
+import PlayerBar from '../ControlBar/ControlBar';
+
+import { ThemeProvider } from '../../contexts/ThemeContext';
+import { PlayerProvider } from '../../contexts/PlayerContext';
+import { PlaylistsProvider } from '../../contexts/PlaylistsContext';
 
 const App: React.FC = () => {
   const location = useLocation();

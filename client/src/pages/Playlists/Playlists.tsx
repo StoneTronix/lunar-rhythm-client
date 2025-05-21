@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { usePlaylists } from '../context/PlaylistsContext'
-import { PlaylistList } from '../components/PlaylistList';
-import PlaylistView from '../components/PlaylistView';
-import '../styles/Playlists.scss';
+import { usePlaylists } from '../../contexts/PlaylistsContext'
+import { PlaylistList } from '../../components/Playlist/Playlist';
+import PlaylistView from '../../components/TrackList/TrackList';
+import './Playlists.scss';
 
 const Playlists: React.FC = () => {
   const { playlists, fetchPlaylists } = usePlaylists();

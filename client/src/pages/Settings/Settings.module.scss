@@ -1,4 +1,4 @@
-@use './variables' as *;
+// @use './variables' as *;
 
 .settings-page {
   padding: 2rem;
@@ -54,23 +54,6 @@
     &.active {
       border-color: theme-var('text-primary');
       transform: scale(1.1);
-    }
-  }
-}
-
-.progress-preview {
-  margin-top: 2rem;
-
-  .progress-bar {
-    height: 6px;
-    background-color: theme-var('border-color');
-    border-radius: 3px;
-    overflow: hidden;
-
-    .progress-thumb {
-      height: 100%;
-      background-color: accent-color('primary');
-      transition: width 0.3s ease, background-color 0.3s ease;
     }
   }
 }

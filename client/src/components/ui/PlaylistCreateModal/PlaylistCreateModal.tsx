@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { usePlaylists } from '../context/PlaylistsContext';
+import { usePlaylists } from '../../../contexts/PlaylistsContext';
 
-const NewPlaylistModal: React.FC = () => {
+const PlaylistCreateModal: React.FC = () => {
   const [title, setTitle] = useState('');
   const { createPlaylist } = usePlaylists();
 
@@ -25,4 +25,4 @@ const NewPlaylistModal: React.FC = () => {
   );
 };
 
-export default NewPlaylistModal;
+export default PlaylistCreateModal;

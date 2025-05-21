@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import TrackItem from './TrackItem';
-import { fetchAllTracks } from '../api/tracks';
-import {Track} from '../utils/types'
+import TrackItem from '../TrackItem/TrackItem';
+
+import { Track } from '../../utils/types'
+import { fetchAllTracks } from '../../api/player-api';
+
+import './TrackSearch.scss'
 
 const TrackSearch: React.FC = () => {
   const [tracks, setTracks] = useState<Track[]>([]);

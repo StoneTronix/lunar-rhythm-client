@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import '../styles/Settings.scss';
-import { useTheme } from '../context/ThemeContext';
+import './Settings.module.scss';
+
+import { useTheme } from '../../contexts/ThemeContext';
 
 const Settings: React.FC = () => {
   const { theme, accent, setTheme, setAccent } = useTheme();

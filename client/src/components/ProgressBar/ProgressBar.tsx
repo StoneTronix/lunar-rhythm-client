@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Slider from '@radix-ui/react-slider';
-import { usePlayer } from '../context/PlayerContext';
-import '../styles/ProgressBar.scss';
+import { usePlayer } from '../../contexts/PlayerContext';
+import './ProgressBar.scss';
 
 const formatTime = (time: number) => {
   const mins = Math.floor(time / 60);

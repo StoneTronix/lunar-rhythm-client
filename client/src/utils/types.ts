@@ -11,6 +11,12 @@ export interface Playlist {
   tracks: Track[];  
 }
 
+export type BaseModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  className?: string;
+};
+
 export interface PlaylistCheckbox extends Playlist {
   checked: boolean;
 }

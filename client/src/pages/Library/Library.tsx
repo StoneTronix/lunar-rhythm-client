@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import TrackSearch from '../components/TrackSearch';
+import TrackSearch from '../../components/TrackSearch/TrackSearch';
 
 const Library: React.FC = () => {
   return (

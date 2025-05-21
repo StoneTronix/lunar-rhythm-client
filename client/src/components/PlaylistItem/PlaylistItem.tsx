@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Playlist } from '../utils/types';
-import { usePlaylists } from '../context/PlaylistsContext';
+import { Playlist } from '../../utils/types';
+import { usePlaylists } from '../../contexts/PlaylistsContext';
 
 interface PlaylistListItemProps {
   playlist: Playlist;

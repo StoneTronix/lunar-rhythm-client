@@ -1,7 +1,7 @@
 import React from 'react';
-import { usePlayer } from '../../context/PlayerContext';
-import ProgressBar from '../ProgressBar';
-import './PlayerBar.scss';
+import { usePlayer } from '../../contexts/PlayerContext';
+import ProgressBar from '../ProgressBar/ProgressBar';
+import './ControlBar.scss';
 
 const PlayerBar: React.FC = () => {
   const { currentTrack, isPlaying, togglePlay } = usePlayer();
@@ -9,7 +9,7 @@ const PlayerBar: React.FC = () => {
   if (!currentTrack) return null;
 
   return (
-    <div className="player-bar">
+    <div className="control-bar">
       <div className="track-info">
         <strong>{currentTrack.title}</strong> — {currentTrack.artist}
       </div>
