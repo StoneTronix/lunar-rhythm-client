@@ -8,3 +8,23 @@
   align-items: center;
   flex-direction: $direction;
 }
+
+@mixin reset-button-styles {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+
+  &::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+}

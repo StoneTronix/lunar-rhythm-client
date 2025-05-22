@@ -1,27 +1,36 @@
 import React, { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { Track } from '../../utils/types';
-import { usePlayer } from '../../contexts/PlayerContext';
-import { usePlaylists } from '../../contexts/PlaylistsContext';
-import PlaylistSelectorModal from '../ui/PlaylistSelectorModal/PlaylistSelectorModal'
 
-interface Props {
+import { Track } from '@utils/types';
+import { usePlayer } from '@contexts/PlayerContext';
+import { usePlaylists } from '@contexts/PlaylistsContext';
+import PlaylistSelectorModal from '@ui/PlaylistSelectorModal/PlaylistSelectorModal';
+
+import './TrackItem.scss';
+
+interface TrackItemProp {
   index: number;
   track: Track;  
   playlistId: string;
+  disableDnD?: boolean;
+  layout?: 'search' | 'tracklist';
 }
 
-const TrackItem: React.FC<Props> = ({ track, index, playlistId }) => {
+const TrackItem: React.FC<TrackItemProp> = ({ 
+  track, index, playlistId, disableDnD = false, layout = 'default' 
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const { currentTrack, isPlaying, togglePlay, playTrack } = usePlayer();
-  const { moveTrackWithinPlaylist } = usePlaylists();
+  const { playlists, moveTrackWithinPlaylist, updateTrackPlaylists } = usePlaylists();
+  const [showModal, setShowModal] = useState(false);  
 
   const [{ isDragging }, drag] = useDrag({
+    canDrag: !disableDnD,
     type: 'TRACK',
     item: { track, index, playlistId },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
-    }),
+    }),    
   });
 
   const [, drop] = useDrop({
@@ -36,10 +45,8 @@ const TrackItem: React.FC<Props> = ({ track, index, playlistId }) => {
 
   drag(drop(ref));
 
-  const [showModal, setShowModal] = useState(false);
-  const { playlists, updateTrackPlaylists } = usePlaylists();
-
-  const handleEditPlaylists = () => {
+  const handleEditPlaylists = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setShowModal(true);
   };
 
@@ -62,19 +69,25 @@ const TrackItem: React.FC<Props> = ({ track, index, playlistId }) => {
 
   return (
     <div
+      className={`track-item ${isDragging ? 'track-item_dragging' : ''}`}
       ref={ref}
-      className={`track-item ${isDragging ? 'dragging' : ''}`}
-      style={{ opacity: isDragging ? 0.5 : 1, cursor: 'move' }}
+      onClick={handlePlayPause} 
     >
-      {/* <div>{index + 1}</div> */}
-      <button onClick={handlePlayPause}>
-        {currentTrack?.id === track.id && isPlaying ? 'Pause' : 'Play'}
-      </button>
-      <div>
-        <strong>{track.title}</strong> — {track.artist}
+      <div className='track-item__index' > {index + 1}</div>
+      {/* <button className="track-item__play-button" >
+        {currentTrack?.id === track.id && isPlaying ? "Pause" : "Play"}
+      </button> */}
+      <div className='track-item__info'>
+        <div className='track-item__title'>{track.title}</div>
+        <div className='track-item__artist'>{track.artist}</div>
       </div>
-      <div>{Math.floor(track.duration / 60)}:{String(track.duration % 60).padStart(2, '0')}</div>
-      <button onClick={handleEditPlaylists}>Изменить плейлисты</button>
+      
+      <div className='track-item__duration'>{Math.floor(track.duration / 60)}:{String(track.duration % 60).padStart(2, '0')}</div>
+      <button
+        className='track-item__controls'
+        onClick={handleEditPlaylists}
+      >        
+      </button>
       
       {showModal && (
         <PlaylistSelectorModal

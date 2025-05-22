@@ -10,11 +10,14 @@ const PlayerBar: React.FC = () => {
 
   return (
     <div className="control-bar">
-      <div className="track-info">
-        <strong>{currentTrack.title}</strong> — {currentTrack.artist}
+      <div className="control-bar__title">
+        {currentTrack.title}
+      </div>
+      <div className="control-bar__artist">
+        {currentTrack.artist}
       </div>
       <ProgressBar />      
-      <button onClick={togglePlay}>
+      <button className='control-bar__button' onClick={togglePlay}>
         {isPlaying ? '⏸' : '▶️'}
       </button>
     </div>

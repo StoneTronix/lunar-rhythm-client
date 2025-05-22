@@ -6,9 +6,14 @@
     "module": "ES6",  // Specify what module code is generated.
     "moduleResolution": "node", // Specify how TypeScript looks up a file from a given module specifier.
     "baseUrl": "./",  // Specify the base directory to resolve non-relative module names.
-    "paths": {      
+    "paths": {
+      "@assets": ["src/assets"],
+      "@contexts/*": ["src/contexts/*"],
+      "@components/*": ["src/components/*"],
+      "@pages/*": ["src/pages/*"],
       "@ui/*": ["src/components/ui/*"],
-      "@pages/*": ["src/pages/*"]
+      "@utils/*": ["src/utils/*"],
+      
     },  // Specify a set of entries that re-map imports to additional lookup locations.                           
     "resolveJsonModule": true,  // Enable importing .json files.
     "allowJs": true,  // Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files.

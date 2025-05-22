@@ -5,22 +5,20 @@
   @include flex-center(row);
   gap: 20px;
   padding: 10px 20px;
-  background: $gradient-primary;
-  box-shadow: $shadow-light;
+  background: var(--bg-secondary);
 }
 
 .navbar a {
-  color: var(--text-primary);
+  @include transition(transform, color);  
   text-decoration: none;
-  font-weight: 500;
-  @include transition(transform, color);
+  font-weight: 500;  
 
   &:hover {
-    color: $accent;
+    color: var(--accent-color);
     transform: scale(1.05);
   }
 }
 
 .navbar .active {
-  border-bottom: 2px solid $accent;
+  border-bottom: 2px solid var(--accent-color);
 }

@@ -1,0 +1,36 @@
+.playlist-item {
+  display: grid;
+  grid-template-columns: auto 1fr repeat(2, auto);
+  align-items: center;
+  padding: 10px 12px;
+  gap: 12px;
+  border-top: 1px solid var(--border-color);;
+  background: var(--bg-primary);
+}
+
+.playlist-item__pic {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background-image: url('../../assets/no-cover.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.playlist-item__title {
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.playlist-item__contains {
+  font-size: 14px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.playlist-item__action {
+
+}

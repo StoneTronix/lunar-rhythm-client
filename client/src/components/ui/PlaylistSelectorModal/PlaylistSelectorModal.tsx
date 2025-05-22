@@ -25,7 +25,8 @@ const PlaylistSelectorModal: React.FC<PlaylistSelectorModalProps> = ({
     );
   };
 
-  const handleSave = () => {
+  const handleSave = (e: React.MouseEvent) => {
+    e.stopPropagation();
     const selectedPlaylistIds = localPlaylists
       .filter(p => p.checked)
       .map(p => p.id);

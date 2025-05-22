@@ -10,24 +10,32 @@
   justify-content: space-between;
   align-items: center;
   z-index: 1000;
+}
 
-  .track-info {
-    width: 100%;
-    flex: 1;
-    font-size: 14px;
-  }
+.control-bar__title {
+  width: 100%;
+  flex: 1;
+  font-size: 14px;
+}
 
-  button {
-    background: none;
-    border: 1px solid #fff;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
+.control-bar__artist {
+  width: 100%;
+  flex: 1;
+  font-size: 14px;
+}
 
-    &:hover {
-      background: white;
-      color: #222;
-    }
+
+.control-bar__button {
+  background: none;
+  border: 1px solid #fff;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background: white;
+    color: #222;
   }
 }
+

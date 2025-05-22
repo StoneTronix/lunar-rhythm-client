@@ -9,7 +9,7 @@ import Library from '@pages/Library/Library';
 import Playlists from '@pages/Playlists/Playlists';
 import Settings from '@pages/Settings/Settings';
 
-import Navbar from '../Navbar/navbar';
+import Navbar from '../Navbar/Navbar';
 import PlayerBar from '../ControlBar/ControlBar';
 
 import { ThemeProvider } from '../../contexts/ThemeContext';

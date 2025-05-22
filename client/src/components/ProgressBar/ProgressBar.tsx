@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Slider from '@radix-ui/react-slider';
 import { usePlayer } from '../../contexts/PlayerContext';
+
 import './ProgressBar.scss';
 
 const formatTime = (time: number) => {
@@ -15,7 +16,6 @@ const ProgressBar: React.FC = () => {
     duration, 
     currentTrack, 
     seekTo,
-    isPlaying
   } = usePlayer();
   
   if (!currentTrack) return null;
@@ -26,21 +26,21 @@ const ProgressBar: React.FC = () => {
   };
 
   return (
-    <div className="progress-bar">
-      <span className="time">{formatTime(progress)}</span>
+    <div className="control-bar__progress-bar">
+      <span className="control-bar__time">{formatTime(progress)}</span>
       <Slider.Root
-        className="slider-root"
+        className="control-bar__slider-root"
         value={[progress]}
         max={duration}
         step={0.1}
         onValueChange={handleValueChange}
       >
-        <Slider.Track className="slider-track">
-          <Slider.Range className="slider-range" />
+        <Slider.Track className="control-bar__slider-track">
+          <Slider.Range className="control-bar__slider-range" />
         </Slider.Track>
-        <Slider.Thumb className="slider-thumb" />
+        <Slider.Thumb className="control-bar__slider-thumb" />
       </Slider.Root>
-      <span className="time">{formatTime(duration)}</span>
+      <span className="control-bar__time">{formatTime(duration)}</span>
     </div>
   );
 };

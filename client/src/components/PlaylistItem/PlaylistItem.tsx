@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Playlist } from '../../utils/types';
 import { usePlaylists } from '../../contexts/PlaylistsContext';
 
+import './PlaylistItem.scss';
+
 interface PlaylistListItemProps {
   playlist: Playlist;
   onSelect: (playlist: Playlist) => void;
@@ -21,19 +23,16 @@ const PlaylistListItem: React.FC<PlaylistListItemProps> = ({ playlist, onSelect 
   };
 
   return (
-    <li
+    <div
+      className='playlist-item'
       onClick={() => onSelect(playlist)}
-      style={{
-        padding: '0.5rem',
-        backgroundColor:'white',
-        cursor: 'pointer',
-        border: '1px solid #ccc',
-        marginBottom: '4px',
-        borderRadius: '4px',
-      }}
     >
-      {playlist.title} ({playlist.tracks.length} треков)
-      <div className="playlist-actions">
+      <div className='playlist-item__pic'></div>
+      <div className='playlist-item__title'>{playlist.title}</div>
+      <div className='playlist-item__contains'> 
+        {playlist.tracks.length} треков 
+      </div> 
+      <div className="playlist-item__actions">
           {isConfirming ? (
             <>
               <button onClick={ handleDelete } className="danger">
@@ -52,7 +51,7 @@ const PlaylistListItem: React.FC<PlaylistListItemProps> = ({ playlist, onSelect 
             </button>
           )}
         </div>
-    </li>
+    </div>
   );
 };
 

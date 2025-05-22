@@ -1,23 +1,26 @@
 import { forwardRef } from 'react';
-import { useDrop } from 'react-dnd';
-import { Track, Playlist } from '../../utils/types';
-import { usePlaylists } from '../../contexts/PlaylistsContext';
-import TrackItem from '../TrackItem/TrackItem';
 
-interface PlaylistViewProps {
+import { Playlist } from '../../utils/types';
+import TrackItem from '../TrackItem/TrackItem';
+// import { useDrop } from 'react-dnd';
+
+import './Tracklist.scss'
+
+interface TracklistProp {
   playlist: Playlist;
 }
 
-const PlaylistView = forwardRef<HTMLDivElement, PlaylistViewProps>(({ playlist }, ref) => { 
+const Tracklist = forwardRef<HTMLDivElement, TracklistProp>(({ playlist }, ref) => { 
   return (
-    <div className="playlist-view"
-      style={{ backgroundColor : 'white' }}
-    >
-      <h2>{playlist.title}</h2>
+    <div className="tracklist">
+      <div className='tracklist__header'>
+        <div className='tracklist__title'>{playlist.title}</div>
+        <button className='tracklist__edit'></button>
+      </div>
       <div>
         {playlist.tracks.map((track, index) => (
           <TrackItem
-          index={index}
+            index={index}
             key={track.id}
             track={track}            
             playlistId={playlist.id}
@@ -28,6 +31,4 @@ const PlaylistView = forwardRef<HTMLDivElement, PlaylistViewProps>(({ playlist }
   );
 });
 
-PlaylistView.displayName = 'PlaylistView';
-
-export default PlaylistView;
+export default Tracklist;

@@ -47,10 +47,14 @@ module.exports = {
       '.json',
       '.css',
       '.scss',
+      '.svg'
     ],
     plugins: [
       new TsconfigPathsPlugin(),
     ],
+    alias: {
+      '@assets': path.resolve(__dirname, 'src/assets'),
+    }
   },
   devServer: {
     static: './dist',

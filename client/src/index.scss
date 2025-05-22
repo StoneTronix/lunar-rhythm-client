@@ -1,15 +1,10 @@
+@use './styles/normalize.css' as *;
 @use './styles/variables' as *;
 @use './styles/mixins' as *;
-@use './styles/theme' as *;
 
-body {
-  margin: 0;
+body {  
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--bg-primary);
-  color: var(--text-color);
+  color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-h1 {
-  font-size: 2rem;
 }

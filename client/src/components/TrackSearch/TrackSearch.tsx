@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TrackItem from '../TrackItem/TrackItem';
 
 import { Track } from '../../utils/types'
-import { fetchAllTracks } from '../../api/player-api';
+import { fetchAllTracks } from '../../Api/PlayerApi';
 
 import './TrackSearch.scss'
 
@@ -32,17 +32,21 @@ const TrackSearch: React.FC = () => {
   );
 
   return (
-    <div className="track-search">
+    <div className="track-search">      
       <input
         type="text"
         placeholder="Поиск треков..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
+      <div className='track-search__settings'>
+        <button className="track-search__option">Sort</button>
+      </div>
+
       {isLoading ? (
-          <div className="loading-spinner">Загрузка...</div>
+          <div className="track-search__loading">Загрузка...</div>
         ) : (
-        <div className="track-list">
+        <div className="track-search__list">
           {filteredTracks.map((track, index) => (
             <TrackItem 
               key={track.id}
@@ -54,7 +58,6 @@ const TrackSearch: React.FC = () => {
         </div>
       )}
     </div>
-
   );
 };
 

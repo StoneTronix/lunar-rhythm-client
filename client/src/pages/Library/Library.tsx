@@ -11,7 +11,7 @@ const Library: React.FC = () => {
       transition={{ duration: 0.5 }}
       className="library-page"
     >
-      <h1>Библиотека треков</h1>
+      <h1 className="library-page__title">Библиотека треков</h1>
       <TrackSearch />
     </motion.div>
   );
