@@ -1,0 +1,95 @@
+@use '../../../styles/mixins' as *;
+
+.track-item {
+  display: grid;
+  grid-template-columns: 30px 1fr 60px 30px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0px;
+  border-top: 1px solid var(--border-color);
+  transition: background 0.2s;
+  z-index: 1;
+
+  &:hover {
+    background: #efefef;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.track-item_search {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0px;
+  border-top: 1px solid var(--border-color);
+  transition: background 0.2s;
+  z-index: 1;
+
+  &:hover {
+    background: #efefef;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.track-item__pic {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background-image: url('../../../assets/no-cover.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.track-item_active {
+  background: #e2e2e2;
+  font-weight: bold;
+}
+
+.track-item_dragging {
+  opacity: 0.5;
+  cursor: 'move'
+}
+
+.track-item__index {
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.track-item__info {
+  .track-item__title {
+    font-size: 0.95em;
+  }
+
+  .track-item__artist {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+  }
+}
+
+.track-item__duration {
+  font-size: 0.9em;
+  text-align: right;
+  color: var(--text-secondary);
+}
+
+.track-item__controls {
+  @include reset-button-styles;
+  height: 18px;
+  width: 18px;
+  text-align: center;
+  font-size: 1.1em;
+  background-image: url('../../../assets/playlists.svg');
+  background-size: contain; 
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  z-index: 2;
+}
