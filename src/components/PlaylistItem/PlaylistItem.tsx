@@ -9,9 +9,14 @@ import './PlaylistItem.scss';
 interface PlaylistListItemProps {
   playlist: Playlist;
   onSelect: (playlist: Playlist) => void;
+  isSelected: boolean;
 }
 
-const PlaylistListItem: React.FC<PlaylistListItemProps> = ({ playlist, onSelect }) => {
+const PlaylistListItem: React.FC<PlaylistListItemProps> = ({ 
+  playlist,
+  isSelected,
+  onSelect 
+}) => {
   const { deletePlaylist } = usePlaylists();  
   const [showDeleteModal, setShowDeleteModal] = useState(false);  
   

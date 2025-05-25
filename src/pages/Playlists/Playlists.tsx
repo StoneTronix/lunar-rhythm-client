@@ -8,8 +8,7 @@ import PlaylistView from '../../components/Tracklist/Tracklist';
 import './Playlists.scss';
 
 const Playlists: React.FC = () => {
-  const { playlists } = usePlaylists();
-  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
+  const { playlists, selectedPlaylistId, setSelectedPlaylistId } = usePlaylists();
   const selectedPlaylist = playlists.find(p => p.id === selectedPlaylistId) || null;
   
   /*
@@ -34,6 +33,7 @@ const Playlists: React.FC = () => {
           <PlaylistList          
             playlists={playlists} 
             onSelect={(playlist) => setSelectedPlaylistId(playlist.id)}
+            selectedPlaylistId={selectedPlaylistId}
           />
         </div>
         <div className="widget__wrapper">

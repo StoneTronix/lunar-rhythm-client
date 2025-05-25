@@ -7,11 +7,12 @@ import PlaylistCreateModal from '@ui/PlaylistCreateModal/PlaylistCreateModal';
 import './PlaylistList.scss'
 
 interface PlaylistListProps {
-  playlists: Playlist[];
+  playlists: Playlist[];  
+  selectedPlaylistId: string | null;
   onSelect: (playlist: Playlist) => void;
 }
 
-export const PlaylistList: FC<PlaylistListProps> = ({ playlists, onSelect }) => {
+export const PlaylistList: FC<PlaylistListProps> = ({ playlists, selectedPlaylistId, onSelect }) => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   
   return (
@@ -31,11 +32,12 @@ export const PlaylistList: FC<PlaylistListProps> = ({ playlists, onSelect }) => 
       </div>
       <div>
         {playlists.map((playlist) => (
-        <PlaylistListItem
-          key={playlist.id}
-          playlist={playlist}
-          onSelect={onSelect}
-        />
+          <PlaylistListItem
+            key={playlist.id}
+            playlist={playlist}
+            onSelect={onSelect}
+            isSelected={playlist.id === selectedPlaylistId}
+          />
         ))}
         {showCreateModal && (
           <PlaylistCreateModal onClose={() => setShowCreateModal(false)} />
