@@ -1,23 +1,22 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useEffect, useContext, useState } from 'react';
 import { Playlist, Track } from '../utils/types';
 import {
   updateTrackPlaylists as updateTrackPlaylistsAPI,
-  fetchPlaylists as fetchPlaylistsFromAPI, 
-  createPlaylist as createPlaylistAPI, 
-  updateTrackOrder as updateTrackOrderAPI, 
-  deletePlaylist as deletePlaylistAPI 
+  fetchPlaylists as fetchPlaylistsAPI,
+  createPlaylist as createPlaylistAPI,
+  updateTrackOrder as updateTrackOrderAPI,
+  deletePlaylist as deletePlaylistAPI,
 } from '@api/PlayerApi';
 
 interface PlaylistsContextType {
   playlists: Playlist[];
-  fetchPlaylists: () => void;
+  setPlaylists: React.Dispatch<React.SetStateAction<Playlist[]>>;
+  fetchPlaylists: () => Promise<void>;
   createPlaylist: (title: string) => Promise<void>;
   deletePlaylist: (id: string) => Promise<void>;
-  updatePlaylists: (playlist: Playlist) => Promise<void>;
-  setPlaylists: React.Dispatch<React.SetStateAction<Playlist[]>>;
+  updateTrackPlaylists: (trackId: string, playlistIds: string[]) => Promise<void>;
   moveTrackWithinPlaylist: (playlistId: string, fromIndex: number, toIndex: number) => void;
   moveTrackToPlaylist: (track: Track, targetPlaylistId: string, fromPlaylistId: string) => void;
-  updateTrackPlaylists: (trackId: string, playlistIds: string[]) => Promise<void>;  
 }
 
 const PlaylistsContext = createContext<PlaylistsContextType | undefined>(undefined);
@@ -25,10 +24,14 @@ const PlaylistsContext = createContext<PlaylistsContextType | undefined>(undefin
 export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
-  // Получить все плейлисты
+  // ToDo: При добавлении авторизации вызвать в другом месте
+  useEffect(() => {
+    fetchPlaylists();
+  }, []); // Пустой массив зависимостей — выполнить только при монтировании
+
   const fetchPlaylists = async () => {
     try {
-      const data = await fetchPlaylistsFromAPI();
+      const data = await fetchPlaylistsAPI();
       setPlaylists(data);
     } catch (err) {
       console.error('Не удалось загрузить плейлисты:', err);
@@ -38,132 +41,98 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const createPlaylist = async (title: string) => {
     try {
       const newPlaylist = await createPlaylistAPI(title);
-      setPlaylists(prev => [...prev, { ...newPlaylist, tracks: [] }]);
+      setPlaylists((prev) => [...prev, { ...newPlaylist, tracks: [] }]);
     } catch (err) {
       console.error('Ошибка создания плейлиста:', err);
     }
   };
 
   const deletePlaylist = async (id: string) => {
-    try {      
-      await deletePlaylistAPI(id);
-      fetchPlaylists();
-    } catch (error) {    
-      setPlaylists(prev => [...prev]);  // Откатываем изменения при ошибке
-      console.error('Ошибка удаления:', error);
-      throw error;  // Пробрасываем ошибку для обработки в UI
-    }
-  };
-  
-  const updatePlaylists = async (playlist: Playlist) => {
     try {
-      const response = await fetch(`http://77.239.118.204:4000/playlists/${playlist.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(playlist),
-      });
-
-      if (!response.ok) {
-        throw new Error('Ошибка при отправке плейлиста на сервер');
-      }
-
-      console.log(`Плейлист "${playlist.title}" обновлён`);
-    } catch (err) {
-      console.error('Ошибка отправки:', err);
+      await deletePlaylistAPI(id);
+      setPlaylists((prev) => prev.filter((p) => p.id !== id));
+    } catch (error) {
+      console.error('Ошибка удаления:', error);
+      throw error;
     }
   };
 
-  const moveTrackWithinPlaylist = async (playlistId: string, fromIndex: number, toIndex: number) => {
-    setPlaylists(prev => {
-      return prev.map(p => {
+  const moveTrackWithinPlaylist = (playlistId: string, fromIndex: number, toIndex: number) => {
+    setPlaylists((prev) =>
+      prev.map((p) => {
         if (p.id !== playlistId) return p;
 
         const updatedTracks = [...p.tracks];
         const [movedTrack] = updatedTracks.splice(fromIndex, 1);
         updatedTracks.splice(toIndex, 0, movedTrack);
-        
-        const updatedPlaylist = { ...p, tracks: updatedTracks };  // Обновляем позиции в UI
 
-        // Отправляем новый порядок на сервер
-        updateTrackOrderAPI(playlistId, updatedTracks.map(t => t.id))
-          .catch(err => {
-            console.error('Ошибка при обновлении порядка:', err);
-            // Можно добавить откат состояния
-          });
+        updateTrackOrderAPI(playlistId, updatedTracks.map((t) => t.id)).catch((err) =>
+          console.error('Ошибка при обновлении порядка:', err)
+        );
 
-        return updatedPlaylist;
-      });
-    });
+        return { ...p, tracks: updatedTracks };
+      })
+    );
   };
 
   const moveTrackToPlaylist = (track: Track, targetPlaylistId: string, fromPlaylistId: string) => {
-    setPlaylists(prev => {
-      const updated = prev.map(p => {
-        if (p.id !== fromPlaylistId && p.id !== targetPlaylistId) return p;
-
+    setPlaylists((prev) => {
+      const updated = prev.map((p) => {
         if (p.id === fromPlaylistId) {
-          const newTracks = p.tracks.filter(t => t.id !== track.id);
-          const updatedPlaylist = { ...p, tracks: newTracks };
-          updatePlaylists(updatedPlaylist); // Отправляем
-          return updatedPlaylist;
+          return { ...p, tracks: p.tracks.filter((t) => t.id !== track.id) };
         }
 
-        if (p.id === targetPlaylistId) {
-          const fromPlaylist = prev.find(p => p.id === fromPlaylistId);
-          const movedTrack = fromPlaylist?.tracks.find(t => t.id === track.id);
-        if (!movedTrack) return p;
-
-          const updatedPlaylist = { ...p, tracks: [...p.tracks, movedTrack] };
-          updatePlaylists(updatedPlaylist); // Отправляем
-          return updatedPlaylist;
+        if (p.id === targetPlaylistId && !p.tracks.some((t) => t.id === track.id)) {
+          return { ...p, tracks: [...p.tracks, track] };
         }
 
-        return p;      
+        return p;
       });
+
       return updated;
-    });    
+    });
+
+    // Синхронизация после измененния состояния
+    updateTrackPlaylists(track.id, [targetPlaylistId]);
   };
 
-  const updateTrackPlaylists = async (trackId: string, playlistIds: string[]) => {       
+  const updateTrackPlaylists = async (trackId: string, playlistIds: string[]) => {
+    // Оптимистичное обновление
+    setPlaylists((prev) => {
+      const track = prev.flatMap((p) => p.tracks).find((t) => t.id === trackId);
+      if (!track) return prev;
+
+      return prev.map((playlist) => ({
+        ...playlist,
+        tracks: playlistIds.includes(playlist.id)
+          ? playlist.tracks.some((t) => t.id === trackId)
+            ? playlist.tracks
+            : [...playlist.tracks, track]
+          : playlist.tracks.filter((t) => t.id !== trackId),
+      }));
+    });
+    // Запрос к API
     try {
-      updateTrackPlaylistsAPI(trackId, playlistIds);
-      
-      // Обновляем локальное состояние
-      setPlaylists(prev => {
-        const targetTrack = prev
-          .flatMap(p => p.tracks)
-          .find(t => t.id === trackId); // Находим трек по ID
-        return prev.map(playlist => ({
-          ...playlist,
-          tracks: playlistIds.includes(playlist.id)
-            ? playlist.tracks.some(t => t.id === trackId)
-              ? playlist.tracks
-              : targetTrack 
-                ? [...playlist.tracks, targetTrack] 
-                : playlist.tracks
-            : playlist.tracks.filter(t => t.id !== trackId)
-        }));
-      });
-      
+      await updateTrackPlaylistsAPI(trackId, playlistIds);
     } catch (error) {
       console.error('Ошибка при обновлении плейлистов трека:', error);
+      fetchPlaylists(); // Перезагружаем актуальные данные
     }
-  };  
+  };
 
   return (
-    <PlaylistsContext.Provider value={{ 
-      playlists, 
-      deletePlaylist, 
-      createPlaylist, 
-      fetchPlaylists, 
-      setPlaylists, 
-      updatePlaylists, 
-      moveTrackWithinPlaylist, 
-      moveTrackToPlaylist, 
-      updateTrackPlaylists}
-    }>
+    <PlaylistsContext.Provider
+      value={{
+        playlists,
+        setPlaylists,
+        fetchPlaylists,
+        createPlaylist,
+        deletePlaylist,
+        updateTrackPlaylists,
+        moveTrackWithinPlaylist,
+        moveTrackToPlaylist,
+      }}
+    >
       {children}
     </PlaylistsContext.Provider>
   );

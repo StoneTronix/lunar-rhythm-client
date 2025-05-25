@@ -8,16 +8,17 @@ import PlaylistView from '../../components/Tracklist/Tracklist';
 import './Playlists.scss';
 
 const Playlists: React.FC = () => {
-  const { playlists, fetchPlaylists } = usePlaylists();
+  const { playlists } = usePlaylists();
   const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
   const selectedPlaylist = playlists.find(p => p.id === selectedPlaylistId) || null;
   
-  // Загружаем плейлисты при монтировании (если они ещё не загружены)
+  /*
   useEffect(() => {
     if (!playlists.length) {
       fetchPlaylists();
     }
   }, [playlists, fetchPlaylists]);  
+  */
 
   return (
     <motion.div

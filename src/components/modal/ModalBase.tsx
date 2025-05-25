@@ -7,7 +7,11 @@ interface BaseModalProps {
   title?: string;
 }
 
-const ModalBase: FC<BaseModalProps> = ({ onClose, children, title }) => {
+const ModalBase: FC<BaseModalProps> = ({ 
+  onClose, 
+  children, 
+  title 
+}) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div 

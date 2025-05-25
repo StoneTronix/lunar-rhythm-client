@@ -27,7 +27,7 @@ export const PlaylistList: React.FC<PlaylistListProps> = ({ playlists, onSelect 
           </button>
         </div>
       </div>
-      {/* <PlaylistCreateModal /> */}
+      { <PlaylistCreateModal /> }
       <div>
          {playlists.map((playlist) => (
           <PlaylistListItem

@@ -66,6 +66,7 @@
 .track-item__info {
   .track-item__title {
     font-size: 0.95em;
+    text-overflow: ellipsis
   }
 
   .track-item__artist {

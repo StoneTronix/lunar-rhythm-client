@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 
 import ModalBase from '@components/modal/ModalBase';
 import { usePlaylists } from '@contexts/PlaylistsContext';
@@ -7,7 +7,7 @@ import './PlaylistSelectorModal.scss';
 
 interface PlaylistSelectorModalProps {
   trackId: string;
-  onSave: (trackId: string, selectedPlaylistIds: string[]) => void;
+  onSave: (selectedPlaylistIds: string[]) => void;
   onClose: () => void;
 }
 
@@ -16,21 +16,25 @@ const PlaylistSelectorModal: FC<PlaylistSelectorModalProps> = ({
   onSave,
   onClose,
 }) => {
-  const { playlists } = usePlaylists();
+  const { playlists, updateTrackPlaylists } = usePlaylists();
   const [localPlaylists, setLocalPlaylists] = useState<
     { id: string; title: string; checked: boolean }[]
   >([]);
 
   useEffect(() => {
-    const checkboxes = playlists.map((p) => ({
-      id: p.id,
-      title: p.title,
-      checked: p.tracks.some((t) => t.id === trackId),
-    }));
-    setLocalPlaylists(checkboxes);
+    initLocalPlaylists();
   }, [playlists, trackId]);
 
-  const handleCheckboxChange = (playlistId: string) => {
+  const initLocalPlaylists = () => {
+    const updated = playlists.map(({ id, title, tracks }) => ({
+      id,
+      title,
+      checked: tracks.some((t) => t.id === trackId),
+    }));
+    setLocalPlaylists(updated);
+  };
+
+  const toggleCheckbox = (playlistId: string) => {
     setLocalPlaylists((prev) =>
       prev.map((p) =>
         p.id === playlistId ? { ...p, checked: !p.checked } : p
@@ -38,26 +42,31 @@ const PlaylistSelectorModal: FC<PlaylistSelectorModalProps> = ({
     );
   };
 
-  const handleSave = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const selected = localPlaylists
+  const handleSave = async () => {
+    const selectedIds = localPlaylists
       .filter((p) => p.checked)
       .map((p) => p.id);
-    onSave(trackId, selected);
-    onClose();
+
+    try {
+      await updateTrackPlaylists(trackId, selectedIds);
+      onSave(selectedIds);
+      onClose();
+    } catch (error) {
+      console.error('Ошибка при обновлении плейлистов трека:', error);
+    }
   };
 
   return (
     <ModalBase title="Выберите плейлисты для трека" onClose={onClose}>
       <div className="playlist-checkboxes">
-        {localPlaylists.map((playlist) => (
-          <label key={playlist.id}>
+        {localPlaylists.map(({ id, title, checked }) => (
+          <label key={id}>
             <input
               type="checkbox"
-              checked={playlist.checked}
-              onChange={() => handleCheckboxChange(playlist.id)}
+              checked={checked}
+              onChange={() => toggleCheckbox(id)}
             />
-            {playlist.title}
+            {title}
           </label>
         ))}
       </div>
