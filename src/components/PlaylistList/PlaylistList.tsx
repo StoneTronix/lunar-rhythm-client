@@ -21,7 +21,10 @@ export const PlaylistList: React.FC<PlaylistListProps> = ({ playlists, onSelect 
         <div className='playlist-list__options'>
           <button className='playlist-list__action playlist-list__action_sort'>
           </button>
-          <button className='playlist-list__action playlist-list__action_add'></button>
+          <button 
+            className='playlist-list__action playlist-list__action_add'
+          >            
+          </button>
         </div>
       </div>
       {/* <PlaylistCreateModal /> */}

@@ -8,6 +8,7 @@
     "baseUrl": "./",  // Specify the base directory to resolve non-relative module names.
     "paths": {
       "@assets": ["src/assets"],
+      "@api/*": ["src/Api/*"],
       "@contexts/*": ["src/contexts/*"],
       "@components/*": ["src/components/*"],
       "@pages/*": ["src/pages/*"],

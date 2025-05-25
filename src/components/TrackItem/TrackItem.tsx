@@ -17,12 +17,12 @@ interface TrackItemProps {
   layout?: 'tracklist' | 'search';  // ToDo: Заменить на объект из types
 }
 
-const TrackItem: React.FC<TrackItemProps> = ({
+const TrackItem: FC<TrackItemProps> = ({
   index, track, playlistId, disableDnD = false, layout = 'tracklist'
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const { currentTrack, isPlaying, togglePlay, playTrack } = usePlayer();
-  const { moveTrackWithinPlaylist, playlists, updateTrackPlaylists } = usePlaylists();
+  const { playlists, moveTrackWithinPlaylist, updateTrackPlaylists } = usePlaylists();
   const [showModal, setShowModal] = useState(false);
 
   const [{ isDragging }, drag] = useDrag({
@@ -61,11 +61,6 @@ const TrackItem: React.FC<TrackItemProps> = ({
     await updateTrackPlaylists(trackId, selectedPlaylistIds);
   };
 
-  const playlistCheckboxes = playlists.map(p => ({
-    ...p,
-    checked: p.tracks.some(t => t.id === track.id),
-  }));
-
   const CurrentLayout = layout === 'tracklist' ? TrackItemTracklist : TrackItemSearch;
 
   return (      
@@ -81,7 +76,6 @@ const TrackItem: React.FC<TrackItemProps> = ({
       {showModal && (
         <PlaylistSelectorModal
           trackId={track.id}
-          playlists={playlistCheckboxes}
           onSave={handleSavePlaylists}
           onClose={() => setShowModal(false)}
         />

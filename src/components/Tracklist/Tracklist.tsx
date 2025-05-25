@@ -2,7 +2,6 @@ import { forwardRef } from 'react';
 
 import { Playlist } from '../../utils/types';
 import TrackItem from '../TrackItem/TrackItem';
-// import { useDrop } from 'react-dnd';
 
 import './Tracklist.scss'
 

@@ -1,7 +1,12 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Playlist, Track } from '../utils/types';
-import { fetchPlaylists as fetchPlaylistsFromAPI, createPlaylist as createPlaylistAPI, updateTrackOrder, deletePlaylist as deletePlaylistAPI } from '../Api/PlayerApi';
-
+import {
+  updateTrackPlaylists as updateTrackPlaylistsAPI,
+  fetchPlaylists as fetchPlaylistsFromAPI, 
+  createPlaylist as createPlaylistAPI, 
+  updateTrackOrder as updateTrackOrderAPI, 
+  deletePlaylist as deletePlaylistAPI 
+} from '@api/PlayerApi';
 
 interface PlaylistsContextType {
   playlists: Playlist[];
@@ -46,12 +51,13 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     } catch (error) {    
       setPlaylists(prev => [...prev]);  // Откатываем изменения при ошибке
       console.error('Ошибка удаления:', error);
-      throw error; // Пробрасываем ошибку для обработки в UI
+      throw error;  // Пробрасываем ошибку для обработки в UI
     }
   };
+  
   const updatePlaylists = async (playlist: Playlist) => {
     try {
-      const response = await fetch(`http://localhost:4000/playlists/${playlist.id}`, {
+      const response = await fetch(`http://77.239.118.204:4000/playlists/${playlist.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -78,10 +84,10 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         const [movedTrack] = updatedTracks.splice(fromIndex, 1);
         updatedTracks.splice(toIndex, 0, movedTrack);
         
-        const updatedPlaylist = { ...p, tracks: updatedTracks };  // Обновляем позиции в UI сразу
+        const updatedPlaylist = { ...p, tracks: updatedTracks };  // Обновляем позиции в UI
 
         // Отправляем новый порядок на сервер
-        updateTrackOrder(playlistId, updatedTracks.map(t => t.id))
+        updateTrackOrderAPI(playlistId, updatedTracks.map(t => t.id))
           .catch(err => {
             console.error('Ошибка при обновлении порядка:', err);
             // Можно добавить откат состояния
@@ -122,11 +128,7 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const updateTrackPlaylists = async (trackId: string, playlistIds: string[]) => {       
     try {
-      await fetch(`http://localhost:4000/playlists/tracks/${trackId}/playlists`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playlistIds }),
-      });
+      updateTrackPlaylistsAPI(trackId, playlistIds);
       
       // Обновляем локальное состояние
       setPlaylists(prev => {
@@ -144,13 +146,24 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             : playlist.tracks.filter(t => t.id !== trackId)
         }));
       });
+      
     } catch (error) {
       console.error('Ошибка при обновлении плейлистов трека:', error);
     }
   };  
 
   return (
-    <PlaylistsContext.Provider value={{ playlists, deletePlaylist, createPlaylist, fetchPlaylists, setPlaylists, updatePlaylists, moveTrackWithinPlaylist, moveTrackToPlaylist, updateTrackPlaylists}}>
+    <PlaylistsContext.Provider value={{ 
+      playlists, 
+      deletePlaylist, 
+      createPlaylist, 
+      fetchPlaylists, 
+      setPlaylists, 
+      updatePlaylists, 
+      moveTrackWithinPlaylist, 
+      moveTrackToPlaylist, 
+      updateTrackPlaylists}
+    }>
       {children}
     </PlaylistsContext.Provider>
   );

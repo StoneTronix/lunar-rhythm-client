@@ -1,4 +1,5 @@
-import { FC, Ref } from 'react';
+import { FC, Ref, MouseEvent } from 'react';
+
 import { Track } from '@utils/types';
 
 import '../TrackItem.scss'
@@ -8,7 +9,7 @@ interface Props {
   index: number;
   isDragging: boolean;
   onPlayPause: () => void;
-  onEditPlaylists: (e: React.MouseEvent) => void;
+  onEditPlaylists: (e: MouseEvent) => void;
   refProp: Ref<HTMLDivElement>;
 }
 

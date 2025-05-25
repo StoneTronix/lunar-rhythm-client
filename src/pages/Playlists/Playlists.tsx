@@ -14,7 +14,7 @@ const Playlists: React.FC = () => {
   
   // Загружаем плейлисты при монтировании (если они ещё не загружены)
   useEffect(() => {
-    if (!playlists) {
+    if (!playlists.length) {
       fetchPlaylists();
     }
   }, [playlists, fetchPlaylists]);  

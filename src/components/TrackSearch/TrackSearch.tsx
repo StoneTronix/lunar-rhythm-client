@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import TrackItem from '../TrackItem/TrackItem';
 
 import { Track } from '../../utils/types'
@@ -6,7 +6,7 @@ import { fetchAllTracks } from '../../Api/PlayerApi';
 
 import './TrackSearch.scss'
 
-const TrackSearch: React.FC = () => {
+const TrackSearch: FC = () => {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -49,11 +49,12 @@ const TrackSearch: React.FC = () => {
         <div className="track-search__list">
           {filteredTracks.map((track, index) => (
             <TrackItem
-              layout='search'
               key={track.id}
+              index={index}              
               track={track}
-              index={index}
-              playlistId="" // Специальный ID для поиска                  
+              playlistId="" // Специальный ID для поиска
+              layout='search'              
+              disableDnD={true}              
             />
           ))}
         </div>

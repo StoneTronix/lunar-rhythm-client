@@ -1,18 +1,22 @@
 import React, {
   createContext,
+  FC,
   useContext,
   useState,
   useRef,
-  useEffect
+  useEffect,
+  ReactNode
 } from 'react';
+
 import { Track } from '../utils/types';
 import { Howl } from 'howler';
+import { fetchTrackFile as fetchTrackFileAPI } from '@api/PlayerApi';
 
 interface PlayerContextType {
   currentTrack: Track | null;
   isPlaying: boolean;
   duration: number;
-  progress: number;  
+  progress: number;
   audioRef: React.RefObject<Howl | null>;
   playTrack: (track: Track) => void;
   togglePlay: () => void;
@@ -22,43 +26,56 @@ interface PlayerContextType {
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 
-export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PlayerProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<Howl | null>(null);
 
-  const playTrack = (track: Track) => {
-    // Остановить текущее воспроизведение, если есть
+  const handleLoad = (sound: Howl) => {
+    setDuration(sound.duration());
+  };
+
+  const handlePlay = (track: Track) => {
+    setIsPlaying(true);
+    setCurrentTrack(track);
+  };
+
+  const handleEnd = () => {
+    setIsPlaying(false);
+    setProgress(0);
+  };
+
+  const handlePause = () => setIsPlaying(false);
+
+  const createHowl = (url: string, track: Track) =>
+    new Howl({
+      src: [url],
+      html5: true,
+      onload: () => handleLoad(audioRef.current!),
+      onplay: () => handlePlay(track),
+      onend: handleEnd,
+      onpause: handlePause
+    });
+
+  const playTrack = async (track: Track) => {
     if (audioRef.current) {
       audioRef.current.unload();
     }
 
-    const sound = new Howl({
-      src: [`http://localhost:4000/playlists/track/${track.id}`],
-      html5: true,
-      onload: () => {
-        setDuration(sound.duration());
-      },
-      onplay: () => {
-        setIsPlaying(true);
-        setCurrentTrack(track);
-      },
-      onend: () => {
-        setIsPlaying(false);
-        setProgress(0);
-      },
-      onpause: () => setIsPlaying(false)
-    });
-
-    audioRef.current = sound;
-    sound.play();
+    try {
+      const audioUrl = await fetchTrackFileAPI(track.id);
+      audioRef.current = createHowl(audioUrl, track);
+      audioRef.current.play();
+    } catch (error) {
+      console.error('Ошибка при загрузке трека:', error);
+    }
   };
 
   const togglePlay = () => {
     if (!audioRef.current) return;
-    
+
     if (isPlaying) {
       audioRef.current.pause();
     } else {
@@ -90,9 +107,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       animationFrameId = requestAnimationFrame(updateProgress);
     }
 
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
+    return () => cancelAnimationFrame(animationFrameId);
   }, [isPlaying]);
 
   return (
