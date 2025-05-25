@@ -7,21 +7,45 @@
   border-radius: 12px;
   overflow: hidden;  
   background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .tracklist__header {  
   display: flex;
-  justify-content: center; 
+  align-items: center;
+  justify-content: center;
   position: relative;
   background: var(--bg-secondary);
   padding: 10px 12px;  
   font-size: 1.1em;
   font-weight: bold;
-  text-align: center;
+}
+
+.tracklist__back-button {
+  @include reset-button-styles;
+  position: absolute;
+  left: 10px;
+  font-size: 1.3em;
+  color: var(--text-primary);
+  cursor: pointer;
+  z-index: 2;
+  display: none; // По умолчанию скрыта
+  
+  &:hover {
+    color: var(--accent-color);
+  }
 }
 
 .tracklist__title {
   font-weight: bold;
+  flex-grow: 1;
+  text-align: center;
+  padding: 0 20px; // Оставляем место для кнопок по бокам
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tracklist__edit {
@@ -37,5 +61,21 @@
   cursor: pointer;  
   position: absolute;
   right: 10px;
-  z-index: 2; 
+  z-index: 2;
+}
+
+.tracklist__content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+// Мобильные стили
+@media (max-width: 768px) {
+  .tracklist__back-button {
+    display: block; // Показываем кнопку "Назад" на мобильных
+  }
+  
+  .tracklist__title {
+    padding-left: 30px; // Добавляем отступ для кнопки "Назад"
+  }
 }

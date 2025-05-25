@@ -5,7 +5,7 @@ import { usePlaylists } from '../../contexts/PlaylistsContext';
 import { useSelectedPlaylist } from '../../hooks/useSelectedPlaylist';
 import './PlaylistList.scss';
 
-export const PlaylistList: FC = () => {
+const PlaylistList: FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { playlists } = usePlaylists();
   const { selectPlaylist, isSelected } = useSelectedPlaylist();
@@ -38,3 +38,5 @@ export const PlaylistList: FC = () => {
     </div>
   );
 };
+
+export default PlaylistList;
