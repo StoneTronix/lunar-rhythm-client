@@ -1,3 +1,5 @@
+@use '../../styles/variables' as *;
+
 .playlist-item {
   display: grid;
   grid-template-columns: auto 1fr repeat(2, auto);
@@ -6,6 +8,16 @@
   gap: 12px;
   border-top: 1px solid var(--border-color);;
   background: var(--bg-primary);
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  &--selected {
+    background-color: var(--accent-color);    
+  }
 }
 
 .playlist-item__pic {

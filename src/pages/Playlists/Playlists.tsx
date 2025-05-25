@@ -1,23 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-
-import { usePlaylists } from '../../contexts/PlaylistsContext'
 import { PlaylistList } from '../../components/PlaylistList/PlaylistList';
 import PlaylistView from '../../components/Tracklist/Tracklist';
-
+import { useSelectedPlaylist } from '../../hooks/useSelectedPlaylist';
 import './Playlists.scss';
 
 const Playlists: React.FC = () => {
-  const { playlists, selectedPlaylistId, setSelectedPlaylistId } = usePlaylists();
-  const selectedPlaylist = playlists.find(p => p.id === selectedPlaylistId) || null;
-  
-  /*
-  useEffect(() => {
-    if (!playlists.length) {
-      fetchPlaylists();
-    }
-  }, [playlists, fetchPlaylists]);  
-  */
+  const { selectedPlaylist } = useSelectedPlaylist();
 
   return (
     <motion.div
@@ -30,11 +19,7 @@ const Playlists: React.FC = () => {
       <h1 className="playlists-page__title">Мои Плейлисты</h1>
       <div className="playlists-page__content">
         <div className="widget__wrapper">
-          <PlaylistList          
-            playlists={playlists} 
-            onSelect={(playlist) => setSelectedPlaylistId(playlist.id)}
-            selectedPlaylistId={selectedPlaylistId}
-          />
+          <PlaylistList />
         </div>
         <div className="widget__wrapper">
           {selectedPlaylist && <PlaylistView playlist={selectedPlaylist} />}

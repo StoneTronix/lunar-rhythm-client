@@ -1,33 +1,25 @@
-import { FC, useState } from 'react';
-
-import { Playlist } from '../../utils/types';
+import React, { FC, useState } from 'react';
 import PlaylistListItem from '../PlaylistItem/PlaylistItem';
 import PlaylistCreateModal from '@ui/PlaylistCreateModal/PlaylistCreateModal';
+import { usePlaylists } from '../../contexts/PlaylistsContext';
+import { useSelectedPlaylist } from '../../hooks/useSelectedPlaylist';
+import './PlaylistList.scss';
 
-import './PlaylistList.scss'
-
-interface PlaylistListProps {
-  playlists: Playlist[];  
-  selectedPlaylistId: string | null;
-  onSelect: (playlist: Playlist) => void;
-}
-
-export const PlaylistList: FC<PlaylistListProps> = ({ playlists, selectedPlaylistId, onSelect }) => {
+export const PlaylistList: FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const { playlists } = usePlaylists();
+  const { selectPlaylist, isSelected } = useSelectedPlaylist();
   
   return (
     <div className='playlist-list'>
       <div className='playlist-list__header'>
-        <div className='playlist-list__title'>
-          Плейлисты
-        </div>
+        <div className='playlist-list__title'>Плейлисты</div>
         <div className='playlist-list__options'>
           <button className='playlist-list__action playlist-list__action_sort'></button>
           <button 
             className='playlist-list__action playlist-list__action_add'
             onClick={() => setShowCreateModal(true)}
-          >            
-          </button>
+          ></button>
         </div>
       </div>
       <div>
@@ -35,8 +27,8 @@ export const PlaylistList: FC<PlaylistListProps> = ({ playlists, selectedPlaylis
           <PlaylistListItem
             key={playlist.id}
             playlist={playlist}
-            onSelect={onSelect}
-            isSelected={playlist.id === selectedPlaylistId}
+            isSelected={isSelected(playlist.id)}
+            onSelect={() => selectPlaylist(playlist.id)}
           />
         ))}
         {showCreateModal && (

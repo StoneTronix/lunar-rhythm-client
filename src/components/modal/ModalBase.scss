@@ -1,3 +1,5 @@
+@use '../../styles/variables' as *;
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -12,7 +14,7 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--bg-primary);
   padding: 20px;
   border-radius: 8px;
   max-width: 500px;

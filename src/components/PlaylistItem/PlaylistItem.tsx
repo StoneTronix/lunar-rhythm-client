@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
-
 import { Playlist } from '../../utils/types';
 import { usePlaylists } from '../../contexts/PlaylistsContext';
 import PlaylistDeleteModal from '@ui/PlaylistDeleteModal/PlaylistDeleteModal';
-
 import './PlaylistItem.scss';
 
 interface PlaylistListItemProps {
   playlist: Playlist;
-  onSelect: (playlist: Playlist) => void;
   isSelected: boolean;
+  onSelect: () => void;
 }
 
 const PlaylistListItem: React.FC<PlaylistListItemProps> = ({ 
-  playlist,
+  playlist, 
   isSelected,
-  onSelect 
+  onSelect
 }) => {
   const { deletePlaylist } = usePlaylists();  
   const [showDeleteModal, setShowDeleteModal] = useState(false);  
@@ -32,8 +30,8 @@ const PlaylistListItem: React.FC<PlaylistListItemProps> = ({
   return (
     <>
       <div 
-        className='playlist-item' 
-        onClick={() => onSelect(playlist)}
+        className={`playlist-item ${isSelected ? 'playlist-item--selected' : ''}`}
+        onClick={onSelect}
       >
         <div className='playlist-item__pic'></div>
         <div className='playlist-item__title'>{playlist.title}</div>
