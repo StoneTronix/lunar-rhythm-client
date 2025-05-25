@@ -33,7 +33,7 @@ const Playlists: React.FC = () => {
         <div className="widget__wrapper">
           <PlaylistList          
             playlists={playlists} 
-            onSelect={(playlist) => setSelectedPlaylistId(playlist.id)} 
+            onSelect={(playlist) => setSelectedPlaylistId(playlist.id)}
           />
         </div>
         <div className="widget__wrapper">

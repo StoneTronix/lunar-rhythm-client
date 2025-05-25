@@ -3,9 +3,7 @@ import { motion } from 'framer-motion';
 
 import SettingsModule from '@components/Settings/Settings'
 
-const Settings: React.FC = () => {
-  
-  
+const Settings: React.FC = () => {  
   return (    
     <motion.div
       initial={{ opacity: 0 }}

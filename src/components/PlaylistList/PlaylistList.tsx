@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, useState } from 'react';
 
 import { Playlist } from '../../utils/types';
 import PlaylistListItem from '../PlaylistItem/PlaylistItem';
@@ -11,7 +11,9 @@ interface PlaylistListProps {
   onSelect: (playlist: Playlist) => void;
 }
 
-export const PlaylistList: React.FC<PlaylistListProps> = ({ playlists, onSelect }) => {
+export const PlaylistList: FC<PlaylistListProps> = ({ playlists, onSelect }) => {
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  
   return (
     <div className='playlist-list'>
       <div className='playlist-list__header'>
@@ -19,23 +21,25 @@ export const PlaylistList: React.FC<PlaylistListProps> = ({ playlists, onSelect 
           Плейлисты
         </div>
         <div className='playlist-list__options'>
-          <button className='playlist-list__action playlist-list__action_sort'>
-          </button>
+          <button className='playlist-list__action playlist-list__action_sort'></button>
           <button 
             className='playlist-list__action playlist-list__action_add'
+            onClick={() => setShowCreateModal(true)}
           >            
           </button>
         </div>
       </div>
-      { <PlaylistCreateModal /> }
       <div>
-         {playlists.map((playlist) => (
-          <PlaylistListItem
-            key={playlist.id}
-            playlist={playlist}
-            onSelect={onSelect}
-          />
+        {playlists.map((playlist) => (
+        <PlaylistListItem
+          key={playlist.id}
+          playlist={playlist}
+          onSelect={onSelect}
+        />
         ))}
+        {showCreateModal && (
+          <PlaylistCreateModal onClose={() => setShowCreateModal(false)} />
+        )}
       </div>
     </div>
   );

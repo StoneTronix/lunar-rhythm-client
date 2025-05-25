@@ -10,7 +10,9 @@ import {
 
 interface PlaylistsContextType {
   playlists: Playlist[];
+  selectedPlaylistId: string | null;
   setPlaylists: React.Dispatch<React.SetStateAction<Playlist[]>>;
+  setSelectedPlaylistId: (id: string | null) => void;  
   fetchPlaylists: () => Promise<void>;
   createPlaylist: (title: string) => Promise<void>;
   deletePlaylist: (id: string) => Promise<void>;
@@ -23,6 +25,7 @@ const PlaylistsContext = createContext<PlaylistsContextType | undefined>(undefin
 
 export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
 
   // ToDo: При добавлении авторизации вызвать в другом месте
   useEffect(() => {
@@ -124,6 +127,8 @@ export const PlaylistsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     <PlaylistsContext.Provider
       value={{
         playlists,
+        selectedPlaylistId,
+        setSelectedPlaylistId,
         setPlaylists,
         fetchPlaylists,
         createPlaylist,
