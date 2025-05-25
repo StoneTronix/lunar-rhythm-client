@@ -1,0 +1,64 @@
+@use '../../styles/variables' as *;
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 120px;
+
+  &__button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  &__slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    touch-action: none;
+    width: 100%;
+    height: 20px;
+  }
+
+  &__track {
+    background-color: var(--bg-primary);
+    position: relative;
+    flex-grow: 1;
+    border-radius: 9999px;
+    height: 4px;
+  }
+
+  &__range {
+    position: absolute;
+    background-color: var(--accent-color);
+    border-radius: 9999px;
+    height: 100%;
+  }
+
+  &__thumb {
+    display: block;
+    width: 12px;
+    height: 12px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+}

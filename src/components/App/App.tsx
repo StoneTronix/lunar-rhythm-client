@@ -10,7 +10,7 @@ import Playlists from '@pages/Playlists/Playlists';
 import Settings from '@pages/Settings/Settings';
 
 import Navbar from '../Navbar/Navbar';
-import PlayerBar from '../ControlBar/ControlBar';
+import ControlBar from '../ControlBar/ControlBar';
 
 import { ThemeProvider } from '../../contexts/ThemeContext';
 import { PlayerProvider } from '../../contexts/PlayerContext';
@@ -34,7 +34,7 @@ const App: React.FC = () => {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </AnimatePresence>
-            <PlayerBar />      
+            <ControlBar />      
           </DndProvider>
         </PlaylistsProvider>
       </PlayerProvider>

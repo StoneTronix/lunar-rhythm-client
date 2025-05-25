@@ -10,18 +10,20 @@ import React, {
 
 import { Track } from '../utils/types';
 import { Howl } from 'howler';
-import { fetchTrackFile as fetchTrackFileAPI } from '@api/PlayerApi';
+import { fetchTrackFile as fetchTrackFileAPI } from 'src/api/PlayerApi';
 
 interface PlayerContextType {
   currentTrack: Track | null;
   isPlaying: boolean;
   duration: number;
   progress: number;
+  volume: number;  
   audioRef: React.RefObject<Howl | null>;
   playTrack: (track: Track) => void;
   togglePlay: () => void;
   setProgress: (value: number) => void;
   seekTo: (position: number) => void;
+  setVolume: (value: number) => void;
 }
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -31,6 +33,10 @@ export const PlayerProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(() => {
+    const savedVolume = localStorage.getItem('playerVolume');
+    return savedVolume ? parseFloat(savedVolume) : 0.7;
+  });
   const audioRef = useRef<Howl | null>(null);
 
   const handleLoad = (sound: Howl) => {
@@ -53,6 +59,7 @@ export const PlayerProvider: FC<{ children: ReactNode }> = ({ children }) => {
     new Howl({
       src: [url],
       html5: true,
+      volume: volume,
       onload: () => handleLoad(audioRef.current!),
       onplay: () => handlePlay(track),
       onend: handleEnd,
@@ -91,6 +98,16 @@ export const PlayerProvider: FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   useEffect(() => {
+    localStorage.setItem('playerVolume', volume.toString());
+  }, [volume]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume(volume);
+    }
+  }, [volume]);
+
+  useEffect(() => {
     let animationFrameId: number;
 
     const updateProgress = () => {
@@ -117,11 +134,13 @@ export const PlayerProvider: FC<{ children: ReactNode }> = ({ children }) => {
         isPlaying,
         progress,
         duration,
+        volume,        
         audioRef,
         playTrack,
         togglePlay,
         setProgress,
-        seekTo
+        seekTo,
+        setVolume,
       }}
     >
       {children}
