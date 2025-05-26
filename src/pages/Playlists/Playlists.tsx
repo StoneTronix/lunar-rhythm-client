@@ -8,7 +8,7 @@ import { useSelectedPlaylist } from '../../hooks/useSelectedPlaylist';
 import './Playlists.scss';
 
 const Playlists: FC = () => {
-  const { selectedPlaylist, selectPlaylist } = useSelectedPlaylist();
+  const { selectedPlaylist, } = useSelectedPlaylist();
   const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
@@ -21,10 +21,6 @@ const Playlists: FC = () => {
     
     return () => window.removeEventListener('resize', checkViewport);
   }, []);
-
-  const handleBackToList = () => {
-    selectPlaylist(null);
-  };
 
   const renderDesktopView = () => (
     <>
@@ -57,8 +53,7 @@ const Playlists: FC = () => {
       transition={{ duration: 0.5 }}
       className="playlists-page"
     >
-      <h1 className="playlists-page__title">Мои Плейлисты</h1>
-      
+      <h1 className="playlists-page__title">Мои Плейлисты</h1>      
       <div className="playlists-page__content">
         {isMobileView ? renderMobileView() : renderDesktopView()}
       </div>

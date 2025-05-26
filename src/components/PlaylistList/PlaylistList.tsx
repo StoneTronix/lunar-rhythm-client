@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import PlaylistListItem from '../PlaylistItem/PlaylistItem';
 import PlaylistCreateModal from '@ui/PlaylistCreateModal/PlaylistCreateModal';
 import { usePlaylists } from '../../contexts/PlaylistsContext';

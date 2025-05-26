@@ -1,0 +1,11 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden; // Убираем глобальную прокрутку
+}
+
+.layout__content {
+  flex: 1;  // Занимает всё доступное пространство
+  overflow-y: auto; // Прокрутка только внутри контента
+}

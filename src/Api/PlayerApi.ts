@@ -11,7 +11,7 @@ export async function fetchAllTracks(): Promise<Track[]> {
 
 // Получение файла трека с сервера
 export async function fetchTrackFile(trackId: string): Promise<string> {
-  // ToDo: Сделать частичное получение файла трека с сервера
+  // ToDo: Наладить частичное получение файла трека с сервера
   return Promise.resolve(`${API_URL}/playlists/track/${trackId}`);
 }
 
