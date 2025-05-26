@@ -24,23 +24,17 @@ const App: React.FC = () => {
   <PlayerProvider> 
     <PlaylistsProvider>
       <DndProvider backend={HTML5Backend}>
-        <div>
-          <Navbar />
-        </div>        
-        <div className="main-content">
-          <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
-                <Route path="/" element={<Home />} />
-                <Route path="/library" element={<Library />} />
-                <Route path="/playlists" element={<Playlists />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-          </AnimatePresence>
-        </div>
-        <div>
-          <ControlBar />
-        </div>        
+        <Navbar />
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<Home />} />
+            <Route path="/library" element={<Library />} />
+            <Route path="/playlists" element={<Playlists />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AnimatePresence>       
+        <ControlBar />
       </DndProvider>
     </PlaylistsProvider>
   </PlayerProvider>

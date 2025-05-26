@@ -1,4 +1,5 @@
 @use '../../../styles/mixins' as *;
+@use '../../../styles/variables' as *;
 
 .track-item {
   display: grid;
@@ -6,9 +7,8 @@
   align-items: center;
   gap: 10px;
   padding: 10px 0px;
-  border-top: 1px solid var(--border-color);
-  transition: background 0.2s;
-  z-index: 1;
+  border-bottom: 1px solid var(--border-color);  
+  transition: background 0.2s;  
 
   &:hover {
     background: #efefef;
@@ -20,22 +20,7 @@
 }
 
 .track-item_search {
-  display: grid;
-  grid-template-columns: auto auto 1fr auto;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0px;
-  border-top: 1px solid var(--border-color);
-  transition: background 0.2s;
-  z-index: 1;
-
-  &:hover {
-    background: #efefef;
-  }
-
-  &:last-child {
-    border-bottom: none;
-  }
+  grid-template-columns: auto 1fr auto auto;
 }
 
 .track-item__pic {
@@ -64,6 +49,7 @@
 }
 
 .track-item__info {
+
   .track-item__title {
     font-size: 0.95em;
     text-overflow: ellipsis
@@ -91,5 +77,4 @@
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
-  z-index: 2;
 }

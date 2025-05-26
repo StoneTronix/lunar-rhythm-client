@@ -25,7 +25,7 @@ const TrackItemSearch: FC<Props> = ({
 
   return (
     <div
-      className="track-item_search"
+      className="track-item track-item_search"
       ref={refProp}
       onClick={onPlayPause}
     >
