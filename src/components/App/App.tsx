@@ -21,24 +21,30 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider>
-      <PlayerProvider> 
-        <PlaylistsProvider>
-          <DndProvider backend={HTML5Backend}>
-            <Navbar />
-            <AnimatePresence mode="wait">
-              <Routes location={location} key={location.pathname}>
+  <PlayerProvider> 
+    <PlaylistsProvider>
+      <DndProvider backend={HTML5Backend}>
+        <div>
+          <Navbar />
+        </div>        
+        <div className="main-content">
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
                 <Route path="/" element={<Home />} />
                 <Route path="/library" element={<Library />} />
                 <Route path="/playlists" element={<Playlists />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
-            </AnimatePresence>
-            <ControlBar />      
-          </DndProvider>
-        </PlaylistsProvider>
-      </PlayerProvider>
-    </ThemeProvider>
+          </AnimatePresence>
+        </div>
+        <div>
+          <ControlBar />
+        </div>        
+      </DndProvider>
+    </PlaylistsProvider>
+  </PlayerProvider>
+</ThemeProvider>
   );
 };
 

@@ -1,0 +1,66 @@
+.home-page {  
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.home-page__overlay {  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+  padding: 2rem;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.home-page__background {
+  background-image: url('../../assets/bg-home.png');
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px);
+  z-index: 0;
+}
+
+.home-page__title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.8rem;
+  }
+}
+
+.home-page__subtitle {
+  font-size: 1.2rem;
+  color: white;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+}
+
+.home-page__button {
+  background: transparent;
+  border: 2px solid #5c7cfa;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #5c7cfa;
+    color: white;
+  }
+}

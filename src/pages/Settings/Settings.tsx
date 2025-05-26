@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-import SettingsModule from '@components/Settings/Settings'
+import SettingsModule from '@components/Settings/SettingsModule'
 
 const Settings: React.FC = () => {  
   return (    

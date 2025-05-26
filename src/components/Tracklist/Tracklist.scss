@@ -24,7 +24,6 @@
 }
 
 .tracklist__back-button {
-  @include reset-button-styles;
   position: absolute;
   left: 10px;
   font-size: 1.3em;
@@ -49,7 +48,6 @@
 }
 
 .tracklist__edit {
-  @include reset-button-styles;
   height: 18px;
   width: 18px;
   font-size: 1.1em;

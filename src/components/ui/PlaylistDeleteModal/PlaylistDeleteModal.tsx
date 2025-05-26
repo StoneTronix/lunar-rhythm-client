@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import ModalBase from '@components/modal/ModalBase';
+import ModalBase from '@components/Modal/ModalBase';
 import './PlaylistDeleteModal.scss';
 
 interface PlaylistDeleteModalProps {

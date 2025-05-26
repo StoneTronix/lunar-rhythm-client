@@ -2,13 +2,9 @@ import React from 'react';
 import * as Slider from '@radix-ui/react-slider';
 import { usePlayer } from '../../contexts/PlayerContext';
 
-import './ProgressBar.scss';
+import formatTime from '@utils/formatTime';
 
-const formatTime = (time: number) => {
-  const mins = Math.floor(time / 60);
-  const secs = Math.floor(time % 60);
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-};
+import './ProgressBar.scss';
 
 const ProgressBar: React.FC = () => {
   const { 

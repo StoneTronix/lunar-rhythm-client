@@ -8,3 +8,12 @@ body {
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+button {
+  @include reset-button-styles;
+}
+
+.main-content {
+  height: calc(100vh - 60px); // Вычитаем высоту Navbar
+  overflow-y: auto;
+}

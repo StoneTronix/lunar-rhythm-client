@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 
-import ModalBase from '@components/modal/ModalBase';
+import ModalBase from '@components/Modal/ModalBase';
 import { usePlaylists } from '@contexts/PlaylistsContext';
 
 import './PlaylistSelectorModal.scss';

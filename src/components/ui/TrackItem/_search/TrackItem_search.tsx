@@ -1,6 +1,8 @@
 import { FC, Ref, MouseEvent } from 'react';
 import { Track } from '@utils/types';
 
+import formatTime from '@utils/formatTime';
+
 import '../TrackItem.scss';
 
 interface Props {
@@ -9,12 +11,6 @@ interface Props {
   onEditPlaylists: (e: MouseEvent) => void;
   refProp: Ref<HTMLDivElement>;
 }
-
-const formatDuration = (duration: number): string => {
-  const minutes = Math.floor(duration / 60);
-  const seconds = String(duration % 60).padStart(2, '0');
-  return `${minutes}:${seconds}`;
-};
 
 const TrackItemSearch: FC<Props> = ({
   track,
@@ -40,7 +36,7 @@ const TrackItemSearch: FC<Props> = ({
         <div className="track-item__artist">{track.artist}</div>
       </div>
 
-      <div className="track-item__duration">{formatDuration(track.duration)}</div>
+      <div className="track-item__duration">{formatTime(track.duration)}</div>
 
       <button
         className="track-item__controls"

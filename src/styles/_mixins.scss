@@ -10,21 +10,13 @@
 }
 
 @mixin reset-button-styles {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  appearance: none;  
+  background: none;
   border: none;
+  outline: none;  
+  font: inherit;
+  color: inherit; 
   margin: 0;
   padding: 0;
-  background: none;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-
-  &::-moz-focus-inner {
-    border: 0;
-    padding: 0;
-  }
+  cursor: pointer;  
 }
