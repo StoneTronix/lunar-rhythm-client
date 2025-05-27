@@ -37,8 +37,10 @@ const ControlBar: React.FC = () => {
         
         <div className="control-bar__buttons">
           <button className="control-bar__control-btn"></button>
-          <button className='control-bar__play-btn' 
+          <button 
+            className='control-bar__play-btn' 
             onClick={togglePlay}
+            aria-label="Play/Pause"
           >
           </button>
           <button className="control-bar__control-btn"></button>

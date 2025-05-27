@@ -23,7 +23,11 @@ const PlaylistDeleteModal: FC<PlaylistDeleteModalProps> = ({
           <button onClick={onClose} className="cancel-button">
             Отмена
           </button>
-          <button onClick={onConfirm} className="danger-button">
+          <button 
+            area-label="удалить"
+            className="danger-button"
+            onClick={onConfirm} 
+          >
             Удалить
           </button>
         </div>

@@ -2,9 +2,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   margin-top: 20px;
+}
+
+.track-search__input {
+  width: 50%;
 }
 
 .track-search__loading {

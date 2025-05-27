@@ -34,11 +34,13 @@ const TrackSearch: FC = () => {
   return (
     <div className="track-search">      
       <input
-        type="text"
-        placeholder="Поиск треков..."
+        className='track-search__input'
+        type='text'
+        placeholder='Поиск треков...'
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
+
       {/* <div className='track-search__settings'>
         <button className="track-search__option">Sort</button>
       </div> */}

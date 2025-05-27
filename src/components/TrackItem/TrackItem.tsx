@@ -1,7 +1,7 @@
 import { FC, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
-import { Track } from '../../utils/types';
+import { Track } from '@utils/types';
 import { usePlayer } from '@contexts/PlayerContext';
 import { usePlaylists } from '@contexts/PlaylistsContext';
 

@@ -4,13 +4,13 @@ import { usePlaylists } from '../../contexts/PlaylistsContext';
 import PlaylistDeleteModal from '@ui/PlaylistDeleteModal/PlaylistDeleteModal';
 import './PlaylistItem.scss';
 
-interface PlaylistListItemProps {
+interface PlaylistItemProps {
   playlist: Playlist;
   isSelected: boolean;
   onSelect: () => void;
 }
 
-const PlaylistListItem: React.FC<PlaylistListItemProps> = ({ 
+const PlaylistItem: React.FC<PlaylistItemProps> = ({ 
   playlist, 
   isSelected,
   onSelect
@@ -20,6 +20,7 @@ const PlaylistListItem: React.FC<PlaylistListItemProps> = ({
   
   const handleDelete = async () => {
     try {
+      console.log('handleDelete called');
       await deletePlaylist(playlist.id);
       setShowDeleteModal(false);
     } catch (error) {
@@ -62,4 +63,4 @@ const PlaylistListItem: React.FC<PlaylistListItemProps> = ({
   );
 };
 
-export default PlaylistListItem;
+export default PlaylistItem;

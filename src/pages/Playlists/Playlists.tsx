@@ -53,7 +53,7 @@ const Playlists: FC = () => {
       transition={{ duration: 0.5 }}
       className="playlists-page"
     >
-      <h1 className="playlists-page__title">Мои Плейлисты</h1>      
+      <h1 className="playlists-page__title">Мои плейлисты</h1>      
       <div className="playlists-page__content">
         {isMobileView ? renderMobileView() : renderDesktopView()}
       </div>
