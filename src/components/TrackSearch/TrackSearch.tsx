@@ -39,9 +39,9 @@ const TrackSearch: FC = () => {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <div className='track-search__settings'>
+      {/* <div className='track-search__settings'>
         <button className="track-search__option">Sort</button>
-      </div>
+      </div> */}
 
       {isLoading ? (
           <div className="track-search__loading">Загрузка...</div>

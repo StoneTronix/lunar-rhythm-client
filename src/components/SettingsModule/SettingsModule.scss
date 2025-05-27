@@ -1,3 +1,5 @@
+@use '../../styles/variables' as *;
+
 .settings {
   display: grid;
   gap: 1.5rem;
@@ -8,11 +10,10 @@
   }
 
   &__card {
-    background-color: #2d2d2d;
+    background-color: var(--bg-secondary);
     padding: 1.5rem;
     border-radius: 1rem;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-    color: #ffffff;
+    color: var(--text-primary);
 
     &_theme {
       order: 1;
@@ -44,20 +45,20 @@
 
   &__app-version {
     font-size: 0.875rem;
-    color: #b0b0b0;
+    color: var(--text-secondary);
     margin-bottom: 0.5rem;
   }
 
   &__note,
   &__copyright {
     font-size: 0.875rem;
-    color: #b0b0b0;
+    color: var(--text-primary);
   }
 
   &__select {
     width: 100%;
-    background-color: #3a3a3a;
-    color: #ffffff;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     padding: 0.5rem;
     margin-bottom: 1rem;
     border-radius: 0.5rem;

@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-import SettingsModule from '@components/Settings/SettingsModule'
+import SettingsModule from '@components/SettingsModule/SettingsModule';
+
+import './Settings.scss';
 
 const Settings: React.FC = () => {  
   return (    
@@ -12,7 +14,7 @@ const Settings: React.FC = () => {
       transition={{ duration: 0.5 }}
       className="settings-page"
     >
-      <h1>Настройки</h1>
+      <h1 className="settings-page__title">Настройки</h1>
       <SettingsModule />
     </motion.div>
   );

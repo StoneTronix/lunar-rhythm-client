@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 
-import ModalBase from '@components/Modal/ModalBase';
+import ModalBase from '@components/ModalBase/ModalBase';
 import { usePlaylists } from '@contexts/PlaylistsContext';
 
 import './PlaylistCreateModal.scss';

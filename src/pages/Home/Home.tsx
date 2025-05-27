@@ -22,8 +22,8 @@ const Welcome: React.FC = () => {
       <div className='home-page__overlay'>
         <h1 className='home-page__title'>Добро пожаловать в Медиаплеер</h1>
         <p className='home-page__subtitle'>
-          Приложение, в котором Вы можете удобно упорядочить <br />
-          и послушать свою любимую музыку
+          Приложение, в котором Вы можете упорядочить <br />
+          и послушать свою музыку
         </p>
         <button className='home-page__button' onClick={handleClick}>
           Войти
