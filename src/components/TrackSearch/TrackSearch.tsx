@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from 'react';
 import TrackItem from '../TrackItem/TrackItem';
 
 import { Track } from '../../utils/types'
-import { fetchAllTracks } from '../../api/PlayerApi';
+import { fetchAllTracks } from '@api/PlayerApi';
 
 import './TrackSearch.scss'
 

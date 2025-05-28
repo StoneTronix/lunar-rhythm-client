@@ -53,6 +53,7 @@ module.exports = {
       new TsconfigPathsPlugin(),
     ],
     alias: {
+      '@api': path.resolve(__dirname, 'src/api/'),
       '@assets': path.resolve(__dirname, 'src/assets'),
     }
   },
