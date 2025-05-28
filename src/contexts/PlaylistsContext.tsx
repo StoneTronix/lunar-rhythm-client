@@ -6,7 +6,7 @@ import {
   createPlaylist as createPlaylistAPI,
   updateTrackOrder as updateTrackOrderAPI,
   deletePlaylist as deletePlaylistAPI,
-} from 'src/api/PlayerApi';
+} from '@api/PlayerApi';
 
 interface PlaylistsContextType {
   playlists: Playlist[];

@@ -10,7 +10,7 @@ import React, {
 
 import { Track } from '../utils/types';
 import { Howl } from 'howler';
-import { fetchTrackFile as fetchTrackFileAPI } from 'src/api/PlayerApi';
+import { fetchTrackFile as fetchTrackFileAPI } from '@api/PlayerApi';
 
 interface PlayerContextType {
   currentTrack: Track | null;
