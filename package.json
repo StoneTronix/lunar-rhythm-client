@@ -6,7 +6,7 @@
   "author": "StoneTronix",
   "type": "commonjs",
   "main": "index.js",
-  "homepage": "https://StoneTronix.github.io/lunar-rhytm-client",
+  "homepage": "https://StoneTronix.github.io/lunar-rhytm-client/",
   "scripts": {
     "build": "webpack --config webpack.config.js --mode production",
     "dev": "webpack serve --mode development",
