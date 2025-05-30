@@ -33,7 +33,7 @@ const SettingsModule = () => {
       </div>
 
       {/* О приложении */}
-      <div className="settings__card settings__card--info">
+      <div className="settings__card settings__card_info">
         <h2 className="settings__title">О приложении</h2>
         <p className="settings__app-name">Lunar Rhytm</p>
         <p className="settings__app-version">v. 1.0.0</p>

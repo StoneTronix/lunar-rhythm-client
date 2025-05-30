@@ -45,24 +45,24 @@ const TrackItem: FC<TrackItemProps> = ({
   };
 
   // DnD логика
-  const [{ isDragging }, drag] = useDrag({
-    type: 'TRACK',
-    item: { track, index, playlistId },
-    canDrag: !disableDnD,
-    collect: (monitor) => ({ isDragging: monitor.isDragging() }),
-  });
+const [{ isDragging }, drag] = useDrag({
+  type: 'TRACK',
+  item: { track, index, playlistId },
+  canDrag: !disableDnD,
+  collect: (monitor) => ({ isDragging: monitor.isDragging() }),
+});
 
-  const [, drop] = useDrop({
-    accept: 'TRACK',
-    hover: (item: any) => {
-      if (!disableDnD && item.playlistId === playlistId && item.index !== index) {
-        moveTrackWithinPlaylist(playlistId, item.index, index);
-        item.index = index;
-      }
-    },
-  });
+const [, drop] = useDrop({
+  accept: 'TRACK',
+  hover: (item: any) => {
+    if (!disableDnD && item.playlistId === playlistId && item.index !== index) {
+      moveTrackWithinPlaylist(playlistId, item.index, index);
+      item.index = index;
+    }
+  },
+});
 
-  if (!disableDnD) drag(drop(ref));
+if (!disableDnD) drag(drop(ref));
 
   const LayoutComponent = layout === 'tracklist' ? TrackItemTracklist : TrackItemSearch;
 
