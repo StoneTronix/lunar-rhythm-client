@@ -24,17 +24,11 @@
 }
 
 .tracklist__back-button {
+  display: none; // По умолчанию скрыта
   position: absolute;
   left: 10px;
-  font-size: 1.3em;
   color: var(--text-primary);
   cursor: pointer;
-  z-index: 2;
-  display: none; // По умолчанию скрыта
-  
-  &:hover {
-    color: var(--accent-color);
-  }
 }
 
 .tracklist__title {
@@ -52,10 +46,6 @@
   width: 18px;
   font-size: 1.1em;
   text-align: center;  
-  background-image: url('../../assets/edit.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
   cursor: pointer;  
   position: absolute;
   right: 10px;
@@ -71,9 +61,5 @@
 @media (max-width: 768px) {
   .tracklist__back-button {
     display: block; // Показываем кнопку "Назад" на мобильных
-  }
-  
-  .tracklist__title {
-    padding-left: 30px; // Добавляем отступ для кнопки "Назад"
   }
 }

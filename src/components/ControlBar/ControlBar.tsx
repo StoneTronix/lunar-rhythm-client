@@ -5,19 +5,10 @@ import ProgressBar from '../ProgressBar/ProgressBar';
 import VolumeControl  from '../VolumeControl/VolumeControl';
 
 import './ControlBar.scss';
+import ButtonIcon from 'src/shared/Button/_icon/Button_icon';
 
 const ControlBar: React.FC = () => {
   const { currentTrack, isPlaying, togglePlay} = usePlayer();
-
-  const PlayIcon = ({ color = 'currentColor' }) => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path 
-        d="M8 5v14l11-7z" 
-        fill={color}
-      />
-    </svg>
-  );
-
   if (!currentTrack) return null;
 
   return (
@@ -35,15 +26,21 @@ const ControlBar: React.FC = () => {
           </div>
         </div>
         
-        <div className="control-bar__buttons">
-          <button className="control-bar__control-btn"></button>
-          <button 
+        <div className="control-bar__buttons">          
+          <ButtonIcon
+            className='control-bar__control-btn reversed' 
+            icon='Next'
+          />
+          <ButtonIcon
             className='control-bar__play-btn' 
+            icon={isPlaying ? 'Pause' : 'Play'}
             onClick={togglePlay}
             aria-label="Play/Pause"
-          >
-          </button>
-          <button className="control-bar__control-btn"></button>
+          />         
+          <ButtonIcon
+            className='control-bar__control-btn' 
+            icon='Next'
+          />
         </div>
 
         <VolumeControl /> 

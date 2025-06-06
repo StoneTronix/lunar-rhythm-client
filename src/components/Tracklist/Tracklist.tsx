@@ -4,6 +4,7 @@ import { Playlist } from '../../utils/types';
 import TrackItem from '../TrackItem/TrackItem';
 import { useSelectedPlaylist } from '../../hooks/useSelectedPlaylist';
 
+import ButtonIcon from 'src/shared/Button/_icon/Button_icon';
 import './Tracklist.scss'
 
 interface TracklistProp {
@@ -22,17 +23,16 @@ const Tracklist = forwardRef<HTMLDivElement, TracklistProp>(({
   return (
     <div className="tracklist">
       <div className='tracklist__header'>
-        
-          <button 
-            className='tracklist__back-button'
-            onClick={handleBackClick}
-            aria-label="Назад к списку плейлистов"
-          >
-            ←
-          </button>
-        
+        <ButtonIcon 
+          className='tracklist__back-button'
+          icon='Back'
+          onClick={handleBackClick}
+          aria-label="Назад к списку плейлистов"
+        />
+
         <div className='tracklist__title'>{playlist.title}</div>
-        <button className='tracklist__edit'></button>
+        
+        <ButtonIcon className='tracklist__edit' icon='Edit' />        
       </div>
       <div>
         {playlist.tracks.map((track, index) => (

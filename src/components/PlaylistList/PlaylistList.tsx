@@ -1,8 +1,11 @@
 import { FC, useState } from 'react';
+
 import PlaylistItem from '../PlaylistItem/PlaylistItem';
 import PlaylistCreateModal from '@ui/PlaylistCreateModal/PlaylistCreateModal';
 import { usePlaylists } from '../../contexts/PlaylistsContext';
 import { useSelectedPlaylist } from '../../hooks/useSelectedPlaylist';
+import ButtonIcon from 'src/shared/Button/_icon/Button_icon';
+
 import './PlaylistList.scss';
 
 const PlaylistList: FC = () => {
@@ -13,14 +16,21 @@ const PlaylistList: FC = () => {
   return (
     <div className='playlist-list'>
       <div className='playlist-list__header'>
-        <div className='playlist-list__title'>Плейлисты • {playlists.length}</div>
+        <div className='playlist-list__title'>Плейлисты • <span className='playlist-list__counter'>{playlists.length}</span></div>
         <div className='playlist-list__options'>
-          <button className='playlist-list__action playlist-list__action_sort'></button>
-          <button 
-            className='playlist-list__action playlist-list__action_add'
+          <ButtonIcon
+            className='playlist-list__action'
+            type='button'
+            icon = 'Sort'
+            aria-label="Сортировка плейлистов"
+          />
+          <ButtonIcon
+            className='playlist-list__action'
+            type='button'
+            icon = 'Add'
             aria-label="Добавить плейлист"
             onClick={() => setShowCreateModal(true)}
-          ></button>
+          />
         </div>
       </div>
       <div>

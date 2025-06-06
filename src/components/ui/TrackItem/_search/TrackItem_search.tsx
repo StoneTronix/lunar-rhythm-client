@@ -1,9 +1,11 @@
 import { FC, Ref, MouseEvent } from 'react';
-import { Track } from '@utils/types';
 
 import formatTime from '@utils/formatTime';
+import { Track } from '@utils/types';
+import ButtonIcon from 'src/shared/Button/_icon/Button_icon';
 
-import '../TrackItem.scss';
+import '../../../TrackItem/TrackItem.scss';
+import './TrackItem_search.scss';
 
 interface Props {
   track: Track;
@@ -38,8 +40,10 @@ const TrackItemSearch: FC<Props> = ({
 
       <div className="track-item__duration">{formatTime(track.duration)}</div>
 
-      <button
+      <ButtonIcon 
         className="track-item__controls"
+        icon='Playlists'
+        type='button'
         onClick={handleEditClick}
         aria-label="Редактировать плейлисты"
       />

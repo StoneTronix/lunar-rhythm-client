@@ -13,8 +13,8 @@ export const useSelectedPlaylist = () => {
 
   return {
     selectedPlaylist,
+    selectedPlaylistId,
     selectPlaylist,
-    isSelected,
-    selectedPlaylistId
+    isSelected
   };
 };

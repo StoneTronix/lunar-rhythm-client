@@ -31,7 +31,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
   return (
     <>
       <div 
-        className={`playlist-item ${isSelected ? 'playlist-item--selected' : ''}`}
+        className={`playlist-item ${isSelected ? 'playlist-item_selected' : ''}`}
         onClick={onSelect}
       >
         <div className='playlist-item__pic'></div>

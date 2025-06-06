@@ -2,8 +2,10 @@ import { FC, Ref, MouseEvent } from 'react';
 import { Track } from '@utils/types';
 
 import formatTime from '@utils/formatTime';
+import ButtonIcon from 'src/shared/Button/_icon/Button_icon';
 
-import '../TrackItem.scss';
+import '../../../TrackItem/TrackItem.scss';
+import './TrackItem_tracklist.scss';
 
 interface Props {
   track: Track;
@@ -30,7 +32,7 @@ const TrackItemTracklist: FC<Props> = ({
   return (
     <div
       ref={refProp}
-      className={`track-item ${isDragging ? 'track-item_dragging' : ''}`}
+      className={`track-item track-item_tracklist ${isDragging ? 'track-item_dragging' : ''}`}
       onClick={onPlayPause}
     >
       <div className="track-item__index">{index + 1}</div>
@@ -42,8 +44,10 @@ const TrackItemTracklist: FC<Props> = ({
 
       <div className="track-item__duration">{formatTime(track.duration)}</div>
 
-      <button
+      <ButtonIcon 
         className="track-item__controls"
+        icon='Playlists'
+        type='button'
         onClick={handleEditClick}
         aria-label="Редактировать плейлисты"
       />

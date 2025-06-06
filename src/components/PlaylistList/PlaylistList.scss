@@ -17,32 +17,13 @@
   font-weight: bold;
 }
 
+.playlist-list__counter {
+  color: var(--text-secondary);
+}
+
 .playlist-list__options {
   display: flex;
   gap: 10px;
-}
-
-.playlist-list__action {
-  width: 18px;
-  height: 18px;  
-  font-size: 16px;  
-  color: var(--text-secondary);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-
-  &:hover {
-    color: #000;
-  }
-}
-
-.playlist-list__action_sort {
-  background-image: url('../../assets/sort.svg');
- 
-}
-
-.playlist-list__action_add {
-  background-image: url('../../assets/add.svg');
 }
   
 

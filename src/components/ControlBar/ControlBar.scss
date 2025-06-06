@@ -1,7 +1,7 @@
 .control-bar {
   --cover-size: 50px;
-  --button-size: 40px;
-  --gap: 12px;
+  --button-size: 35px;
+  --gap: 20px;
 
   display: grid;
   grid-template-rows: auto 1fr;
@@ -13,6 +13,10 @@
   position: sticky;
   bottom: 0;
   z-index: 10;
+}
+
+.reversed {
+  transform: scaleX(-1);
 }
 
 .control-bar__timeline {
@@ -74,32 +78,24 @@
 }
 
 .control-bar__control-btn {
-  width: var(--button-size);
-  height: var(--button-size);
-  background: url('../../assets/next.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  width: 30px;
+  height: 30px;  
   border: none;
   color: var(--text-primary);
   font-size: 18px;
   cursor: pointer;
+  transition: transform 0.2s;
 }
 
 .control-bar__play-btn {
   width: var(--button-size);
-  height: var(--button-size);
-  background: url('../../assets/play.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  border: none;
+  height: var(--button-size);  
   cursor: pointer;
   transition: transform 0.2s;
 
   &:hover {
     transform: scale(1.1);
-    background-color: var(--accent-color);
+    color: var(--accent-color);
   }
 }
 

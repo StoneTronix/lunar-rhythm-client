@@ -1,5 +1,3 @@
-@use '../../styles/variables' as *;
-
 .playlist-item {
   display: grid;
   grid-template-columns: auto 1fr repeat(2, auto);
@@ -11,7 +9,7 @@
   cursor: pointer;
   transition: background-color 0.2s;
 
-  &--selected {
+  &_selected {
     background-color: var(--accent-color);    
   }
 }

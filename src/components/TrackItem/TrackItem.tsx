@@ -21,11 +21,11 @@ const TrackItem: FC<TrackItemProps> = ({
   index,
   track,
   playlistId,
-  disableDnD = false,
+  disableDnD = false,  
   layout = 'tracklist',
-}) => {
+}) => {  
   const ref = useRef<HTMLDivElement>(null);
-  const { currentTrack, isPlaying, togglePlay, playTrack } = usePlayer();
+  const { currentTrack, togglePlay, playTrack } = usePlayer();
   const { moveTrackWithinPlaylist, updateTrackPlaylists } = usePlaylists();
   const [showModal, setShowModal] = useState(false);
 
