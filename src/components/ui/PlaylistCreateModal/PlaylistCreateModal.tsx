@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 
 import ModalBase from '@components/ModalBase/ModalBase';
 import { usePlaylists } from '@contexts/PlaylistsContext';
+import ButtonText from 'src/shared/Button/_text/Button_text';
 
 import './PlaylistCreateModal.scss';
 

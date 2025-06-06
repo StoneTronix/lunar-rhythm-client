@@ -1,6 +1,3 @@
-@use '../../styles/mixins' as *;
-@use '../../styles/variables' as *;
-
 .track-item {
   display: grid;
   align-items: center;
@@ -9,15 +6,14 @@
   border-bottom: 1px solid var(--border-color);
   transition: background 0.2s;  
 
-  &:hover {
+  &_active {
     background: var(--selection-color);
   }
 
-  &.active {
-    background: var();
-    font-weight: bold;
+  &:hover {
+    background: var(--selection-color);
   }
-
+  
   &:last-child {
     border-bottom: none;
   }
@@ -36,11 +32,6 @@
 .track-item_dragging {
   opacity: 0.5;
   cursor: 'move'
-}
-
-.track-item__index {
-  text-align: center;
-  color: var(--text-secondary);
 }
 
 .track-item__info {

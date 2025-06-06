@@ -34,7 +34,7 @@ export const PlayerProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(() => {
-    const savedVolume = localStorage.getItem('playerVolume');
+  const savedVolume = localStorage.getItem('playerVolume');
     return savedVolume ? parseFloat(savedVolume) : 0.7;
   });
   const audioRef = useRef<Howl | null>(null);

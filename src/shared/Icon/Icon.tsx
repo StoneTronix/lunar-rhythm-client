@@ -11,6 +11,7 @@ interface IconProps {
 }
 
 const Icon: FC<IconProps> = ({
+  className = '',
   name,
   color = 'currentColor',
 }) => {
@@ -20,7 +21,7 @@ const Icon: FC<IconProps> = ({
 
   return (
     <SvgIcon
-      className={`${styles.icon}`}
+      className={`${styles.icon} ${className}`}
       color={color}
     />
   );

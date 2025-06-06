@@ -1,21 +1,32 @@
 import { FC } from 'react';
-import Button, { ButtonProps } from '../Button';
-import styles from './ButtonText.module.scss';
 
-interface ButtonTextProps extends Omit<ButtonProps, 'children'> {
-  ariaLabel?: string;
+import Button, { ButtonProps } from '../Button';
+
+import styles from './Button_text.module.scss';
+
+type ButtonTextType = 'default' | 'confirm' | 'cancel';
+
+interface ButtonTextProps extends ButtonProps {
+  textType?: ButtonTextType;
 }
 
-const ButtonIcon: FC<ButtonTextProps> = ({  
-  ariaLabel,
+const ButtonText: FC<ButtonTextProps> = ({
+  className = '',
+  textType = 'default',
+  children,
   ...rest
-}) => (
-  <Button
-    children={null} 
-    className={`${styles.button_icon}`}
-    aria-label={ariaLabel}
-    {...rest}  >    
-  </Button>
-);
+}) => {
+  console.log(styles);
+  const typeClass = styles[`button_text_${textType}`] || '';
 
-export default ButtonIcon;
+  return (
+    <Button
+      className={`${styles.buttonText} ${className}`}
+      {...rest}
+    >
+      {children}
+    </Button>
+  );
+};
+
+export default ButtonText;

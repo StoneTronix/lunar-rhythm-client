@@ -1,0 +1,12 @@
+.track-item_tracklist {
+  grid-template-columns: 30px 1fr auto auto;
+}
+
+.track-item__index {
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.track-item__plays {
+  height: 1.4em;
+}

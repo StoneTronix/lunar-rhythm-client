@@ -3,6 +3,7 @@ export { default as Edit } from './edit.svg';
 export { default as Next } from './next.svg';
 export { default as Play } from './play.svg';
 export { default as Pause } from './pause.svg';
+export { default as IsPlaying } from './is-playing.svg';
 export { default as Playlists } from './playlists.svg';
 export { default as Sort } from './sort.svg';
 export { default as Back } from './back.svg';

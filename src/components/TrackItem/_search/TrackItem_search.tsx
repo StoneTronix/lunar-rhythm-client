@@ -4,7 +4,7 @@ import formatTime from '@utils/formatTime';
 import { Track } from '@utils/types';
 import ButtonIcon from 'src/shared/Button/_icon/Button_icon';
 
-import '../../../TrackItem/TrackItem.scss';
+import '../TrackItem.scss';
 import './TrackItem_search.scss';
 
 interface Props {

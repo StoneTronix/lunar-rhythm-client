@@ -16,7 +16,7 @@ const PlaylistList: FC = () => {
   return (
     <div className='playlist-list'>
       <div className='playlist-list__header'>
-        <div className='playlist-list__title'>Плейлисты • <span className='playlist-list__counter'>{playlists.length}</span></div>
+        <div className='playlist-list__title'>Плейлисты <span className='playlist-list__counter'>• {playlists.length}</span></div>
         <div className='playlist-list__options'>
           <ButtonIcon
             className='playlist-list__action'

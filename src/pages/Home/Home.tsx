@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 import './Home.scss';
+import ButtonText from 'src/shared/Button/_text/Button_text';
 
 const Welcome: React.FC = () => {
   const navigate = useNavigate();
@@ -25,9 +26,7 @@ const Welcome: React.FC = () => {
           Приложение, в котором Вы можете упорядочить <br />
           и послушать свою музыку
         </p>
-        <button className='home-page__button' onClick={handleClick}>
-          Войти
-        </button>
+        <ButtonText textType="default" onClick={handleClick}>Войти</ButtonText>
       </div>
       <div className='home-page__background'></div>
     </motion.div>

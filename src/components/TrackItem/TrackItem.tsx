@@ -6,8 +6,8 @@ import { usePlayer } from '@contexts/PlayerContext';
 import { usePlaylists } from '@contexts/PlaylistsContext';
 
 import PlaylistSelectorModal from '@ui/PlaylistSelectorModal/PlaylistSelectorModal';
-import TrackItemTracklist from '@ui/TrackItem/_tracklist/TrackItem_tracklist';
-import TrackItemSearch from '@ui/TrackItem/_search/TrackItem_search';
+import TrackItemTracklist from './_tracklist/TrackItem_tracklist';
+import TrackItemSearch from './_search/TrackItem_search';
 
 interface TrackItemProps {
   index: number;
@@ -21,9 +21,9 @@ const TrackItem: FC<TrackItemProps> = ({
   index,
   track,
   playlistId,
-  disableDnD = false,  
+  disableDnD = false,
   layout = 'tracklist',
-}) => {  
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const { currentTrack, togglePlay, playTrack } = usePlayer();
   const { moveTrackWithinPlaylist, updateTrackPlaylists } = usePlaylists();
@@ -39,30 +39,30 @@ const TrackItem: FC<TrackItemProps> = ({
   };
 
   const handleSavePlaylists = (selectedPlaylistIds: string[]) => {
-    // Оптимистичное обновление перед запросом к API
-    updateTrackPlaylists(track.id, selectedPlaylistIds)
-      .finally(() => setShowModal(false));
+    updateTrackPlaylists(track.id, selectedPlaylistIds).finally(() => setShowModal(false));
   };
 
-  // DnD логика
-const [{ isDragging }, drag] = useDrag({
-  type: 'TRACK',
-  item: { track, index, playlistId },
-  canDrag: !disableDnD,
-  collect: (monitor) => ({ isDragging: monitor.isDragging() }),
-});
+  // DnD-логика
+  const [{ isDragging }, drag] = useDrag({
+    type: 'TRACK',
+    item: { track, index, playlistId },
+    canDrag: !disableDnD,
+    collect: (monitor) => ({ isDragging: monitor.isDragging() }),
+  });
 
-const [, drop] = useDrop({
-  accept: 'TRACK',
-  hover: (item: any) => {
-    if (!disableDnD && item.playlistId === playlistId && item.index !== index) {
-      moveTrackWithinPlaylist(playlistId, item.index, index);
-      item.index = index;
-    }
-  },
-});
+  const [, drop] = useDrop({
+    accept: 'TRACK',
+    hover: (item: any) => {
+      if (!disableDnD && item.playlistId === playlistId && item.index !== index) {
+        moveTrackWithinPlaylist(playlistId, item.index, index);
+        item.index = index;
+      }
+    },
+  });
 
-if (!disableDnD) drag(drop(ref));
+  if (!disableDnD) drag(drop(ref));
+
+  const isActive = currentTrack?.id === track.id;
 
   const LayoutComponent = layout === 'tracklist' ? TrackItemTracklist : TrackItemSearch;
 
@@ -75,6 +75,7 @@ if (!disableDnD) drag(drop(ref));
         isDragging={isDragging}
         onPlayPause={handlePlayPause}
         onEditPlaylists={handleEditPlaylists}
+        isActive={isActive}
       />
       {showModal && (
         <PlaylistSelectorModal
